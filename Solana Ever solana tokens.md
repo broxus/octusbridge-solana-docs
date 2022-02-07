@@ -19,3 +19,7 @@ to use vault in `Solana` blockchain to store received from users tokens and lock
 ## Reminders
 
 1. Set owner of `Vault` account to `Token proxy` program.
+
+## Schema
+
+![Solana Ever Solana tokens](../png/solana_ever_solana_tokens.png "Solana Ever Solana tokens")

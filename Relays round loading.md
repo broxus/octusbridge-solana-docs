@@ -24,4 +24,4 @@ If it is some kind of admin, it must have access to do it. Maybe he mustn't as t
 
 ## Schema
 
-![Relays round loading](../png/Relays_round_loading.png "Relays round loading")
+![Relays round loading](../png/relays_round_loading.png "Relays round loading")

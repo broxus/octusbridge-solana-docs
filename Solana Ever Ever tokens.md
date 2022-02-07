@@ -20,3 +20,7 @@ to use token root owned by `Token proxy` program in `Solana` blockchain to burn 
 
 1. Where to store `Token root` account address?
 It will be passed on program input by user, and it must be validated in `Token proxy` program.
+
+## Schema
+
+![Solana Ever Ever tokens](../png/solana_ever_ever_tokens.png "Solana Ever Ever tokens")
