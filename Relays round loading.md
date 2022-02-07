@@ -21,3 +21,7 @@ It will be passed on program input by user, and it must be validated in `Bridge`
 2. Who transfers new round relays to `Solana`?
 If it is relays, they must have lamports to pay gas fee. 
 If it is some kind of admin, it must have access to do it. Maybe he mustn't as this event is signed by old round relays and this check is enough.
+
+## Schema
+
+![Relays round loading](../png/Relays_round_loading.png "Relays round loading")
