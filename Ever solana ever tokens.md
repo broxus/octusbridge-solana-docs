@@ -12,8 +12,8 @@ to use token root owned by `Token proxy` program in `Solana` blockchain to mint 
 5. User calls mint tokens in `Solana` `Token Proxy` program transferring payload with relays signs.
 6. `Token Proxy` program calls `Bridge` program to check relays signs.
 7. `Bridge` program gets current round relays info (public keys, addresses) and checks signs.
-8. If no error got from `Bridge` program, then `Token proxy` gets info from `Token root` account.
-9. `Token proxy` program calls mint on `SPL token` program.
+8. If no error got from `Bridge` program, then `Token proxy` creates unique withdraw account with `PayloadId` from event.
+9. If no withdraw account was created before, then `Token proxy` program calls mint on `SPL token` program.
 10. `SPL token` program mints tokens and increases users balance.
 
 ## Questions
