@@ -56,5 +56,10 @@ Mint algorithm
 9. `Token Proxy` gets requested round relays info (public keys, addresses), checks that callers address is relay and round is not expired.
 10. If all is ok, `Token Proxy` program saves relays approval to withdrawal account and checks if there are enough confirms. 
 11. if there are enough confirms, `Token proxy` program calls mint tokens on `SPL token` program.
+12. `SPL token` program mints tokens and increases users balance.
 
 In that case withdrawal account can have only two states: new and processed.
+
+## Schema
+
+![Ever Solana Ever tokens 2](../png/ever_solana_ever_tokens_2.png "Ever Solana Ever tokens 2")
