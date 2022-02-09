@@ -1,5 +1,7 @@
 # Proposal #1
 
+## Motivation
+
 Bridge `Solana-Everscale` must have the ability to transfer `Solana` tokens from `Everscale` to `Solana`. The idea here is
 to use vault owned by `Token proxy` program in `Solana` blockchain to unlock tokens.
 
@@ -40,11 +42,15 @@ They do not fit the max size of client transaction, and user have to us batching
 
 # Proposal #2
 
+## Motivation
+
 As it has been described in `Relay round loading` proposal #2 we do not need to check signatures in programs, because 
-we always know who is calling its in `Solana`. So this is the first modification. Another on is that we can avoid loading
+we always know who is calling its in `Solana`. So this is the first modification. Another one is that we can avoid loading
 all relays approvals from user side, because they can themselves confirm withdrawal in `Solana`.
 
 ## Withdrawal Algorithm
+
+Standard withdrawal algorithm
 
 1. `Everscale` `Token proxy` burns user tokens after Web3 request.
 2. `Token proxy` sends new event to `Ever event config`.
@@ -80,8 +86,50 @@ Withdraw account is containing following:
 
 ![Ever Solana Solana tokens 2](../png/ever_solana_solana_tokens_2.png "Ever Solana Solana tokens 2")
 
-## Force withdrawal Algorithm
+## Force pending withdrawal algorithm
 
 User can force his withdrawal in pending state when he sees that vault balance is enough.
+
+1. User calls force pending withdraw in `Solana` `Token Proxy` program, transferring payload.
+2. `Token proxy` checks existence of withdraw account, relays confirmations, pending state.
+3. `Token proxy` checks vault balance.
+4. If balance is enough, `Token proxy` program calls transfer tokens on `SPL token` program.
+5. `SPL token` program decreases `Vault` account tokens and increases users tokens balance.
+
+## Cancel pending withdrawal algorithm
+
+User can cancel his withdrawal in pending state when he wants to decline it.
+
+1. User calls cancel pending withdraw in `Solana` `Token Proxy` program, transferring payload.
+2. `Token proxy` checks existence of withdraw account, relays confirmations, pending state.
+3. `Token proxy` sets withdrawal state as cancelled.
+4. `Token proxy` creates `Deposit` PDA, containing mirrored data from withdrawal account, as like the user transferred 
+funds in opposite direction.
+5. Relays are monitoring this transaction and begin transferring procedure from `Solana` to `Everscale` (this is described in corresponding chapter).
+
+## Add / change bounty for pending withdrawal algorithm
+
+User can set bounty for proceeding his pending withdrawal, in order to other users have motivation to fill it and receive
+bounty in `Everscale`.
+
+1. User calls add or change bounty for pending withdraw in `Solana` `Token Proxy` program, transferring payload and bounty size.
+2. `Token proxy` checks existence of withdraw account, relays confirmations, pending state.
+3. `Token proxy` checks that bounty size is lower than amount in withdrawal.
+4. `Token proxy` changes bounty size in withdrawal account.
+
+
+## Filling pending withdrawal algorithm
+
+User from `Solana` side of the bridge can see that for filling withdrawal from `Everscale` side he can receive bounty
+in `Everscale`. So he creates corresponding transfer of tokens from `Solana` to `Everscale`.
+
+1. User calls fill pending withdraw in `Solana` `Token Proxy` program, transferring payload.
+2. `Token proxy` checks existence of withdraw account, relays confirmations, pending state.
+3. `Token proxy` checks that users balance is bigger than amount in withdrawal minus bounty.
+4. `Token proxy` program calls transfer tokens (withdrawal amount minus bounty) on `SPL token` program.
+5. `SPL token` program decreases users account tokens and increases withdrawal receiver tokens balance.
+6. `Token proxy` creates `Deposit` PDA, containing mirrored data from withdrawal account, as like the user transferred
+   all funds in opposite direction.
+7. Relays are monitoring this transaction and begin transferring procedure from `Solana` to `Everscale` (this is described in corresponding chapter).
 
 

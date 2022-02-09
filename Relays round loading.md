@@ -1,5 +1,7 @@
 # Proposal #1
 
+## Motivation
+
 In order to check the signatures of relays for each transfer from `Everscale` to `Solana`, all round relays must be stored in `Bridge` [PDA](https://pencilflip.medium.com/learning-solana-3-what-is-a-program-derived-address-732b06def7c1) account. 
 
 This will cost a very little of money, paid for the [rent](https://docs.solana.com/developing/programming-model/accounts#rent). 
@@ -30,6 +32,8 @@ The size of one relay pub key is 32 byte. The maximum count of relays in one rou
 its size must be at least 3200 byte. The limit is 1232 bytes. So this proposal design, copied from `Ethereum` bridge, is not appropriate in `Solana`! 
 
 # Proposal #2
+
+## Motivation
 
 In `Solana` by design we can calculate who is calling the instruction inside program, so we do not need any signatures like in `Ethereum`, where we do not know that and can 
 check it only by signatures. Knowing this, we can simplify our bridge architecture, authorizing calls of new `Relays` loading by current round relays. 
