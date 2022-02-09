@@ -24,7 +24,7 @@ to use vault in `Solana` blockchain to store received from users tokens and lock
 
 ## Schema
 
-![Solana Ever Solana tokens](../png/solana_ever_solana_tokens.png "Solana Ever Solana tokens")
+![Solana Ever Solana tokens](../../png/solana_ever_solana_tokens.png "Solana Ever Solana tokens")
 
 ## Proposal #2
 

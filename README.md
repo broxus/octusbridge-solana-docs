@@ -12,24 +12,24 @@ tokens from `Everscale` to `Solana`.
 
 MVP includes transfer tokens from (to) `Solana` to (from) `Everscale` and contains 5 big steps.
 
-1. Load new round relays from `Everscale` to `Solana`.
-2. Transfer `Everscale` tokens from `Everscale` to `Solana`.
-3. Transfer `Solana` tokens from `Everscale` to `Solana`.
+1. Load new round relays from `Everscale` to `Solana`. [Doc](../MVP/relays_round_loading.md)
+2. Transfer `Everscale` tokens from `Everscale` to `Solana`. [Doc](../MVP/from_ever_to_solana_with_ever_tokens.md)
+3. Transfer `Solana` tokens from `Everscale` to `Solana`. [Doc](../MVP/from_ever_to_solana_with_solana_tokens.md)
    1. Transfer tokens from vault, when there is enough funds.
    2. Force pending withdraw. The case when it was not enough on withdraw occurred, but someone has fulfilled the vault.
    3. Cancel pending withdraw.
    4. Add/Change bounty to pending withdraw.
    5. Fill pending withdraw, that has bounty reward for it.
-4. Transfer `Everscale` tokens from `Solana` to `Everscale`.
-5. Transfer `Solana` tokens from `Solana` to `Everscale`.
+4. Transfer `Everscale` tokens from `Solana` to `Everscale`. [Doc](../MVP/from_solana_to_ever_with_ever_tokens.md)
+5. Transfer `Solana` tokens from `Solana` to `Everscale`. [Doc](../MVP/from_solana_to_ever_with_solana_tokens.md)
 
 ## II Stage
 
-II Stage includes transfer tokens from `Solana` to `Everscale` with the use of credits processor in `Everscale`.
+II Stage includes transfer tokens from `Solana` to `Everscale` with the use of credits processor in `Everscale`. [Doc](../Stage 2/from_solana_to_ever_with_solana_tokens_2_stage.md)
 
 ## III Stage
 
-III Stage includes transfer locked in `Solana` tokens to different protocols in `Solana` to earn on them.
+III Stage includes transfer locked in `Solana` tokens to different protocols in `Solana` to earn on them. [Doc](../Stage 3/transfer_liquidity_in_solana_to_protocol_3_stage.md)
 
 # Questions
 
