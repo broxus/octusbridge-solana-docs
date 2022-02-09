@@ -52,9 +52,9 @@ from seed containing round number, proposal creator public key and `Bridge` prog
 6. Relays are voting for it using `Bridge` program and proposal address.
 7. If voting is completed, `Bridge` stores in PDA new round relays info.
 
-### New round relay proposal
+### New round relays proposal
 
-New round relay proposal is an account containing following:
+New round relays proposal is an account containing following:
 * New relays addresses (public keys)
 * Round TTL
 * Round number
@@ -65,6 +65,13 @@ New round relay proposal is an account containing following:
   * `New` state is needed to load all relays via batching mechanics.
   * `Started` state is when current round relays can vote.
   * `Finished` state is when there is enough votes to accept the proposal and new round relays are created successfully.
+  
+### New round relays 
+
+New round relays is an account containing following:
+* New relays addresses (public keys)
+* Round TTL
+* Round number
 
 ## Schema
 
