@@ -1,8 +1,8 @@
-# Architecture
+# Motivation
 
-Architecture is presented in draw.io format in current repo with docs for each step.
+Each step design is presented in draw.io format in current repo with corresponding docs.
 
-Main idea was to create `Token Proxy` and `Bridge` programs and `Vault` and `Token Root` accounts in `Solana` 
+In the beginning the main idea was to create `Token Proxy` and `Bridge` programs and `Vault` and `Token Root` accounts in `Solana` 
 and to use the same principles in `Everscale` as for `Ethereum`, `BSC`, ... 
 But limits of one transaction size from client in `Solana` showed that the same architecture couldn't be used.
 So it was a little modified to meet `Solana` standards. It affected new round relays loading and transferring
@@ -15,8 +15,8 @@ MVP includes transfer tokens from (to) `Solana` to (from) `Everscale` and contai
 1. Load new round relays from `Everscale` to `Solana`.
 2. Transfer `Everscale` tokens from `Everscale` to `Solana`.
 3. Transfer `Solana` tokens from `Everscale` to `Solana`.
-   1. Transfer tokens from vault, when there is enough tokens on it.
-   2. Force pending withdraw, when it was not enough when withdraw occurred, but one has fulfilled the vault.
+   1. Transfer tokens from vault, when there is enough funds.
+   2. Force pending withdraw. The case when it was not enough on withdraw occurred, but someone has fulfilled the vault.
    3. Cancel pending withdraw.
    4. Add/Change bounty to pending withdraw.
    5. Fill pending withdraw, that has bounty reward for it.
@@ -46,8 +46,7 @@ The max limit in `Solana` is 10Mb. It is enough to all accounts and programs, us
 The max limit in `Solana` is 1232 bytes according to [docs](https://docs.solana.com/ru/proposals/transactions-v2). 
 It is very small to transfer all relays and its signatures for transfer from `Everscale` like it was done in `Ethereum` bridge.
 
-
-# Reminders
+# Reminders for developers
 
 1. Remember to reserve more size for accounts and programs for future uses.
 2. Make `Bridge` program, save its public key (address) to `Token Proxy` to check that only this `Bridge` program will be used.
