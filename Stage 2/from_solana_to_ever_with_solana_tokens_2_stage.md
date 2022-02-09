@@ -1,4 +1,6 @@
-# Principles
+# Proposal #1
+
+## Motivation
 
 Bridge `Solana-Everscale` will have the ability to transfer `Solana` tokens from `Solana` to `Everscale` for users that do not have `Evers`. 
 The idea here is to use credit factory and credit processors in `Everscale` blockchain to swap part of `Solana` tokens to `Evers`
@@ -25,6 +27,16 @@ to deploy users token smart contract. Additional credit backend must be used to 
 
 1. Set owner of `Vault` account to `Token proxy` program.
 
-## Schema
+## Scheme
 
 ![Solana Ever Solana tokens 2 stage](../png/solana_ever_solana_tokens_2_stage.png "Solana Ever Solana tokens 2 stage")
+
+## Proposal #2
+
+To save all token burns by user it is good to use the same PDA as for `Solana` tokens from `Solana` to `Everscale` transfer,
+created on each user request.
+Between steps 4 and 5 `Token proxy` program should create such one.
+
+### Deposit model
+
+Deposit model is the same as for `Solana` tokens from `Solana` to `Everscale` transfer.

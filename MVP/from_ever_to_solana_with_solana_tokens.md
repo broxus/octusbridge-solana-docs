@@ -31,7 +31,7 @@ It will be passed on program input by user, and it must be validated in `Bridge`
 
 1. Set owner of `Vault` account to `Token proxy` program.
 
-## Schema
+## Scheme
 
 ![Ever Solana Solana tokens](../png/ever_solana_solana_tokens.png "Ever Solana Solana tokens")
 
@@ -82,7 +82,7 @@ Withdraw account is containing following:
     * `Cancelled` - user asked to cancel withdrawal, his funds were minted in `Everscale` to his address back.
     * `Pending` - there is not enough funds on vault to process the withdrawal.
 
-## Schema
+## Scheme
 
 ![Ever Solana Solana tokens 2](../png/ever_solana_solana_tokens_2.png "Ever Solana Solana tokens 2")
 

@@ -16,7 +16,7 @@ For each round new non-upgradeable PDA account will be created.
 5. `Bridge` program gets old round relays info (public keys, addresses) from PDA and checks correctness of signatures received in event info.
 6. `Bridge` stores in PDA new round relays info.
 
-## Schema
+## Scheme
 
 ![Relays round loading](../png/relays_round_loading.png "Relays round loading")
 
@@ -56,7 +56,7 @@ from seed containing round number, proposal creator public key and `Bridge` prog
 6. Relays are voting for it using `Bridge` program and proposal address.
 7. If voting is completed, `Bridge` stores in PDA new round relays info.
 
-### New round relays proposal
+### New round relays proposal account
 
 New round relays proposal is an account containing following:
 * New relays addresses (public keys)
@@ -70,13 +70,13 @@ New round relays proposal is an account containing following:
   * `Started` state is when current round relays can vote.
   * `Finished` state is when there is enough votes to accept the proposal and new round relays are created successfully.
   
-### New round relays 
+### New round relays account
 
 New round relays is an account containing following:
 * New relays addresses (public keys)
 * Round TTL
 * Round number
 
-## Schema
+## Scheme
 
 ![Relays round loading 2](../png/relays_round_loading_2.png "Relays round loading 2")

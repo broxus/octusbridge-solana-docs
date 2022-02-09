@@ -27,7 +27,7 @@ It will be passed on program input by user, and it must be validated in `Token p
 3. Where to store `Current round relays` account address?
 It will be passed on program input by user, and it must be validated in `Bridge` program.
 
-## Schema
+## Scheme
 
 ![Ever Solana Ever tokens](../png/ever_solana_ever_tokens.png "Ever Solana Ever tokens")
 
@@ -60,6 +60,6 @@ Mint algorithm
 
 In that case withdrawal account can have only two states: new and processed.
 
-## Schema
+## Scheme
 
 ![Ever Solana Ever tokens 2](../png/ever_solana_ever_tokens_2.png "Ever Solana Ever tokens 2")

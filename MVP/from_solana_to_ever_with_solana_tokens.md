@@ -22,7 +22,7 @@ to use vault in `Solana` blockchain to store received from users tokens and lock
 
 1. Set owner of `Vault` account to `Token proxy` program.
 
-## Schema
+## Scheme
 
 ![Solana Ever Solana tokens](../../png/solana_ever_solana_tokens.png "Solana Ever Solana tokens")
 
@@ -31,9 +31,9 @@ to use vault in `Solana` blockchain to store received from users tokens and lock
 To save all deposits by user it is good to have PDA, created on each user request.
 Between steps 4 and 5 `Token proxy` program should create such one.
 
-### Deposit model
+### Deposit account
 
-Deposit model must contain following fields:
+Deposit account must contain following fields:
 * Sender address in `Solana`
 * Receiver address in `Everscale`
 * Amount

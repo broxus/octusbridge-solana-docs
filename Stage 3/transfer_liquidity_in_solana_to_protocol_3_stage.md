@@ -1,4 +1,6 @@
-# Principles
+# Proposal #1
+
+## Motivation
 
 To earn money on bridge locked liquidity in `Solana` some of the deposit protocols may be used. When DAO in `Everscale` decides to do so, it makes a proposal.
 Voters, who have `Bridge` tokens can vote for it and, when the voting is finished with positive result, one can start process of
@@ -25,6 +27,6 @@ It will be passed on program input by user, and it must be validated in `Bridge`
 If it is relays, they must have lamports to pay gas fee. 
 If it is some kind of admin, it must have access to do it. Maybe he mustn't as this event is signed by old round relays and this check is enough.
 
-## Schema
+## Scheme
 
 ![Transfer liquidity to Protocol](../png/solana_ever_solana_tokens_3_stage.png "Transfer liquidity to Protocol")
