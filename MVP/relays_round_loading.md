@@ -2,7 +2,7 @@
 
 ## Motivation
 
-In order to check the signatures of relays for each transfer from `Everscale` to `Solana`, all round relays must be stored in `Bridge` [PDA](https://pencilflip.medium.com/learning-solana-3-what-is-a-program-derived-address-732b06def7c1) account. 
+In order to check the signatures of relays for each transfer from `Everscale` to `Solana`, all round relays must be stored in `Round loader` [PDA](https://pencilflip.medium.com/learning-solana-3-what-is-a-program-derived-address-732b06def7c1) account. 
 
 This will cost a very little of money, paid for the [rent](https://docs.solana.com/developing/programming-model/accounts#rent). 
 For each round new non-upgradeable PDA account will be created.
@@ -12,9 +12,9 @@ For each round new non-upgradeable PDA account will be created.
 1. `Everscale` `Staking` sends new round relays to `Ever event config`.
 2. `Ever event config` deploys new `Ever event` with payload containing new round relays.
 3. Relays confirm this event.
-4. Relays transfer this event to `Solana` `Bridge` program.
-5. `Bridge` program gets old round relays info (public keys, addresses) from PDA and checks correctness of signatures received in event info.
-6. `Bridge` stores in PDA new round relays info.
+4. Relays transfer this event to `Solana` `Round loader` program.
+5. `Round loader` program gets old round relays info (public keys, addresses) from PDA and checks correctness of signatures received in event info.
+6. `Round loader` stores in PDA new round relays info.
 
 ## Scheme
 
@@ -23,7 +23,7 @@ For each round new non-upgradeable PDA account will be created.
 ## Questions
 
 1. Where to store current round account address?
-It will be calculated from relays round and formed by `Bridge` program, using seeds mechanics.
+It will be calculated from relays round and formed by `Round loader` program, using seeds mechanics.
 2. Who can transfer new round relays to `Solana`?
 If it is relays, they must have lamports to pay gas fee. 
 If it is some kind of admin, it must have access to do it. Maybe he mustn't as this event is signed by old round relays and this check is enough.
@@ -43,18 +43,18 @@ To avoid client transaction limit we can divide loading into parts.
 Here is some point to attack. If one or more relays are compromised, they can load false relays keys in new round.
 We can avoid that by creating new relays proposal, that only current round relay can create. And if that proposal 
 achieve 2 / 3 + 1 vote by current round relays, this proposal become new round relays. 
-The proposal can be created in manual / semi-manual mode by relays. It is PDA of `Bridge` program with address derived
-from seed containing round number, proposal creator public key and `Bridge` program id.
+The proposal can be created in manual / semi-manual mode by relays. It is PDA of `Round loader` program with address derived
+from seed containing round number, proposal author public key and `Round loader` program id.
 
 ## Algorithm
 
 1. `Everscale` `Staking` sends new round relays to `Ever event config`.
 2. `Ever event config` deploys new `Ever event` with payload containing new round relays.
 3. Relays confirm this event.
-4. One of relays create new round relays proposal via `Solana` `Bridge` program.
-5. `Bridge` program creates PDA, containing proposal data.
-6. Relays are voting for it using `Bridge` program and proposal address.
-7. If voting is completed, `Bridge` stores in PDA new round relays info.
+4. One of relays create new round relays proposal via `Solana` `Round loader` program.
+5. `Round loader` program creates PDA, containing proposal data.
+6. Relays are voting for it using `Round loader` program and proposal address.
+7. If voting is completed, `Round loader` stores in PDA new round relays info.
 
 ### New round relays proposal account
 

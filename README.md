@@ -2,7 +2,7 @@
 
 Each step design is presented in draw.io format in current repo with corresponding docs.
 
-In the beginning the main idea was to create `Token Proxy` and `Bridge` programs and `Vault` and `Token Root` accounts in `Solana` 
+In the beginning the main idea was to create `Token Proxy` and `Round loader` programs and `Vault` and `Token Root` accounts in `Solana` 
 and to use the same principles in `Everscale` as for `Ethereum`, `BSC`, ... 
 But limits of one transaction size from client in `Solana` showed that the same architecture couldn't be used.
 So it was a little modified to meet `Solana` standards. It affected new round relays loading and transferring
@@ -52,8 +52,8 @@ We can just take the same keys.
 # Reminders for developers
 
 1. Remember to reserve more size for accounts and programs for future uses.
-2. Make `Bridge` program, save its public key (address) to `Token Proxy` to check that only this `Bridge` program will be used.
-3. Store each round relays in `Bridge` program dependent account. So `Bridge` will have all rounds relays and can check transfer in any round.
+2. Make `Round loader` program, save its program id to `Token Proxy` to check that only this `Round loader` program will be used.
+3. Store each round relays in `Round loader` program dependent accounts. So all rounds relays will be stored and one can check relay public key from any round.
 4. In case of transfer from `Everscale`, `Token Proxy` must store payload id, generate address and check that it was not created before. This will save us from double spending.
-5. Validate all accounts on input for both `Token Proxy` and `Bridge` programs. As by design all accounts in `Solana` is 
+5. Validate all accounts on input for both `Token Proxy` and `Round loader` programs. As by design all accounts in `Solana` is 
 transferred by user in client transaction, all programs must check all of them in order to not get fooled.
