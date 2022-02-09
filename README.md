@@ -45,6 +45,9 @@ The max limit in `Solana` is 10Mb. It is enough to all accounts and programs, us
 5. What is client transaction size limit?
 The max limit in `Solana` is 1232 bytes according to [docs](https://docs.solana.com/ru/proposals/transactions-v2). 
 It is very small to transfer all relays and its signatures for transfer from `Everscale` like it was done in `Ethereum` bridge.
+5. How to reuse relays keys without loading new one, specific for `Solana`?
+`Solana` [supports](https://solana-labs.github.io/solana-web3.js/classes/Keypair.html) Ed25519 Keypair, so do `Everscale`. 
+We can just take the same keys.
 
 # Reminders for developers
 
