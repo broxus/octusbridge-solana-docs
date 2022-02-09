@@ -1,4 +1,6 @@
-# Principles
+# Proposal #1
+
+## Motivation
 
 Bridge `Solana-Everscale` must have the ability to transfer `Everscale` tokens from `Solana` to `Everscale`. The idea here is 
 to use token root owned by `Token proxy` program in `Solana` blockchain to burn tokens.
@@ -24,3 +26,15 @@ It will be passed on program input by user, and it must be validated in `Token p
 ## Schema
 
 ![Solana Ever Ever tokens](../png/solana_ever_ever_tokens.png "Solana Ever Ever tokens")
+
+## Proposal #2
+
+To save all token burns by user it is good to use the same PDA as for `Solana` tokens from `Solana` to `Everscale` transfer, 
+created on each user request.
+Between steps 4 and 5 `Token proxy` program should create such one.
+
+### Deposit model
+
+Deposit model is the same as for `Solana` tokens from `Solana` to `Everscale` transfer.
+
+It will not have any state because we assume that it is created when user funds was successfully burned.

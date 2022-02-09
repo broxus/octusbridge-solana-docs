@@ -1,4 +1,6 @@
-# Principles
+# Proposal #1
+
+## Motivation
 
 Bridge `Solana-Everscale` must have the ability to transfer `Solana` tokens from `Solana` to `Everscale`. The idea here is 
 to use vault in `Solana` blockchain to store received from users tokens and lock them until opposite direction transfer will occur.
@@ -23,3 +25,19 @@ to use vault in `Solana` blockchain to store received from users tokens and lock
 ## Schema
 
 ![Solana Ever Solana tokens](../png/solana_ever_solana_tokens.png "Solana Ever Solana tokens")
+
+## Proposal #2
+
+To save all deposits by user it is good to have PDA, created on each user request.
+Between steps 4 and 5 `Token proxy` program should create such one.
+
+### Deposit model
+
+Deposit model must contain following fields:
+* Sender address in `Solana`
+* Receiver address in `Everscale`
+* Amount
+* Payload Id
+* Token root in `Solana`
+
+It will not have any state because we assume that it is created when user has successfully deposited his funds to the vault.
