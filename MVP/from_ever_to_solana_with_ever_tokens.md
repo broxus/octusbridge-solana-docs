@@ -58,7 +58,7 @@ Mint algorithm
 11. if there are enough confirms, `Token proxy` program calls mint tokens on `SPL token` program.
 12. `SPL token` program mints tokens and increases users balance.
 
-In that case withdrawal [account](../from_ever_to_solana_solana_tokens.md#withdraw-account) can have only three states: new, processed and waiting for approve.
+In that case withdrawal [account](../from_ever_to_solana_solana_tokens.md) can have only three states: new, processed and waiting for approve.
 
 ## Scheme
 
