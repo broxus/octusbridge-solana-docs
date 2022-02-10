@@ -49,7 +49,7 @@ Mint algorithm
 2. `Token proxy` sends new event to `Ever event config`.
 3. `Ever event config` deploys new `Ever event` with payload containing transfer.
 4. Relays get info from `Ever event`, containing all withdrawal payload.
-5. User calls withdraw tokens from vault in `Solana` `Token Proxy` program, transferring payload.
+5. User calls withdraw tokens from token root in `Solana` `Token Proxy` program, transferring payload.
 6. `Token proxy` creates unique withdraw account with payload from event.
 7. Relays get callback from `Token proxy` program about new withdrawal.
 8. Relays send confirm withdrawal to `Token proxy`, containing payload from `Everscale`.

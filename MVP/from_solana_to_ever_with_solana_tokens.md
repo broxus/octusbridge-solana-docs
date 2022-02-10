@@ -34,10 +34,11 @@ Between steps 4 and 5 `Token proxy` program should create such one.
 ### Deposit account
 
 Deposit account must contain following fields:
+* Payload Id
 * Sender address in `Solana`
 * Receiver address in `Everscale`
 * Amount
-* Payload Id
-* Token root in `Solana`
+* `Token root` account address
+* Decimals count
 
 It will not have any state because we assume that it is created when user has successfully deposited his funds to the vault.

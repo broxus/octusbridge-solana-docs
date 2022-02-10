@@ -96,3 +96,9 @@ New round relays is an account containing following:
 Settings account contains:
 * Last round number
 * Is initialized flag
+
+## Upgrade
+
+Deployer of `Round loader` program can upgrade code via BPF loader at any time, using his keys pair. It would replace
+old program with the new one, but address will remain the same. So deployer keys must be stored very caution. Maybe
+the best here is to use multi-signature account.
