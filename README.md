@@ -2,7 +2,7 @@
 
 Each step design is presented in draw.io format in current repo with corresponding docs.
 
-In the beginning the main idea was to create `Token Proxy` and `Round loader` programs and `Vault` and `Token Root` accounts in `Solana` 
+In the beginning the main idea was to create `Token Proxy` and `Round loader` ([Doc](../programs/round_loader.md)) programs and `Vault` and `Token Root` accounts in `Solana` 
 and to use the same principles in `Everscale` as for `Ethereum`, `BSC`, ... 
 But limits of one transaction size from client in `Solana` showed that the same architecture couldn't be used.
 So it was a little modified to meet `Solana` standards. It affected new round relays loading and transferring
