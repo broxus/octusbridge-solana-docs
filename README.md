@@ -20,6 +20,7 @@ MVP includes transfer tokens from (to) `Solana` to (from) `Everscale` and contai
    3. Cancel pending withdraw.
    4. Add/Change bounty to pending withdraw.
    5. Fill pending withdraw, that has bounty reward for it.
+   6. Approve withdrawals over limit
 4. Transfer `Everscale` tokens from `Solana` to `Everscale`. [Doc](../MVP/from_solana_to_ever_with_ever_tokens.md)
 5. Transfer `Solana` tokens from `Solana` to `Everscale`. [Doc](../MVP/from_solana_to_ever_with_solana_tokens.md)
 
@@ -38,12 +39,12 @@ III Stage includes transfer locked in `Solana` tokens to different protocols in 
 2. Add access to `Token Proxy` to mint / burn `Everscale` Tokens
 This is done via [CPI](https://docs.solana.com/developing/programming-model/calling-between-programs).
 3. It is needed to decide what architecture to use - one `Token Proxy` for all tokens or one `Token Proxy` for each token?
-The main idea here is that if attacker could have access to token proxy it could make less damage, if one `Token Proxy` 
+Main idea here - if attacker could have access to token proxy, it could make less damage, if one `Token Proxy` 
 is used for each token.
 4. What are programs and accounts size limits?
-The max limit in `Solana` is 10Mb. It is enough to all accounts and programs, used for bridging.
+Max limit in `Solana` is 10Mb. It is enough to all accounts and programs, used for bridging.
 5. What is client transaction size limit?
-The max limit in `Solana` is 1232 bytes according to [docs](https://docs.solana.com/ru/proposals/transactions-v2). 
+Max limit in `Solana` is 1232 bytes according to [docs](https://docs.solana.com/ru/proposals/transactions-v2). 
 It is very small to transfer all relays and its signatures for transfer from `Everscale` like it was done in `Ethereum` bridge.
 6. How to reuse relays keys without loading new one, specific for `Solana`?
 `Solana` [supports](https://solana-labs.github.io/solana-web3.js/classes/Keypair.html) Ed25519 Keypair, so do `Everscale`. 

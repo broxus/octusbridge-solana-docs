@@ -62,9 +62,11 @@ Standard withdrawal algorithm
 8. Relays send confirm withdrawal to `Token proxy`, containing payload from `Everscale`.
 9. `Token Proxy` gets requested round relays info (public keys, addresses), checks that callers address is relay and round is not expired.
 10. If all is ok, `Token Proxy` program saves relays approval to withdrawal account and checks if there are enough confirms.
-11. `Token proxy` checks vault balance. 
-12. If balance is enough, `Token proxy` program calls transfer tokens on `SPL token` program.
-13. `SPL token` program decreases `Vault` account tokens and increases users tokens balance.
+11. `Token proxy` checks that withdrawal amount is below the limit. In other case it changes state to `Waiting for approve`.
+12. `Token proxy` checks vault balance. 
+13. If balance is enough, `Token proxy` program calls transfer tokens on `SPL token` program.
+14. `SPL token` program decreases `Vault` account tokens and increases users tokens balance.
+15. `Token proxy` sets state to `Processed`.
 
 ### Withdraw account
 
@@ -75,12 +77,13 @@ Withdraw account is containing following:
 * Amount
 * Payload Id
 * Bounty for withdrawal
-* State: new, expired, processed, cancelled, pending
+* State: new, expired, processed, cancelled, pending, waiting for approve
     * `New` is needed to save relays confirms.
     * `Expired` - current round ttl is expired and withdrawal can not be processed.
     * `Processed` - all funds were successfully transferred to user.
     * `Cancelled` - user asked to cancel withdrawal, his funds were minted in `Everscale` to his address back.
     * `Pending` - there is not enough funds on vault to process the withdrawal.
+    * `Waiting for approve` - withdraw amount is bigger than the limit
 
 ## Scheme
 
@@ -117,7 +120,6 @@ bounty in `Everscale`.
 3. `Token proxy` checks that bounty size is lower than amount in withdrawal.
 4. `Token proxy` changes bounty size in withdrawal account.
 
-
 ## Filling pending withdrawal algorithm
 
 User from `Solana` side of the bridge can see that for filling withdrawal from `Everscale` side he can receive bounty
@@ -132,4 +134,17 @@ in `Everscale`. So he creates corresponding transfer of tokens from `Solana` to 
    all funds in opposite direction.
 7. Relays are monitoring this transaction and begin transferring procedure from `Solana` to `Everscale` (this is described in corresponding chapter).
 
+## Approve over limit withdrawals algorithm
+
+All withdrawals that exceeds limits will be stuck in `Waiting for approve` state. In that case admin key is used to approve
+this withdrawal.
+
+1. Admin calls approve pending withdraw in `Solana` `Token Proxy` program, transferring payload.
+2. `Token proxy` checks existence of withdraw account, relays confirmations, state.
+3. `Token proxy` checks admin key for correctness.
+4. `Token proxy` changes state to `Pending` for withdrawal.
+5. `Token proxy` checks vault balance.
+6. If balance is enough, `Token proxy` program calls transfer tokens on `SPL token` program.
+7. `SPL token` program decreases `Vault` account tokens and increases users tokens balance.
+15. `Token proxy` sets state to `Processed`.
 
