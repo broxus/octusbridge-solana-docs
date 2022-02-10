@@ -65,10 +65,8 @@ New round relays proposal is an account containing following:
 * Author of proposal
 * Voters
 * Number of votes to be accepted
-* State: new, started, finished
-  * `New` state is needed to load all relays via batching mechanics.
-  * `Started` state is when current round relays can vote.
-  * `Finished` state is when there is enough votes to accept the proposal and new round relays are created successfully.
+* Is loaded flag (shows that relays can vote)
+* Is accepted flag (shows that proposal is accepted and new round relays is created successfully)
   
 ### New round relays account
 
