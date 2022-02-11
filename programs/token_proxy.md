@@ -66,7 +66,7 @@ This is transfer from `Solana` to `Everscale`.
 2. `Token proxy` program calculates `Settings` PDA address, fetches it and gets `Vault` account address.
 3. `Token proxy` program fetches `Vault` account.
 4. It uses `SPL token` program address from settings to call transfer users tokens from users account to `Vault` account.
-5.`Token proxy` program creates `Deposit` PDA.
+5. `Token proxy` program creates `Deposit` PDA.
 
 #### Deposit account
 
