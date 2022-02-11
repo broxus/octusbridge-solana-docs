@@ -50,7 +50,7 @@ This allows relays to be always up-to-date with what is happening on `Solana` si
 
 ### Deposit
 
-This is transfer from `Solana` to `Everscale`. 
+This is the transfer from `Solana` to `Everscale`. 
 
 #### `Everscale` tokens deposit
 
@@ -80,7 +80,7 @@ This is transfer from `Solana` to `Everscale`.
 
 ### Withdraw
 
-This is transfer from `Everscale` to `Solana`. 
+This is the transfer from `Everscale` to `Solana`. 
 
 #### `Everscale` tokens withdraw
 
