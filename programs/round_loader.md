@@ -1,7 +1,5 @@
 # Design
 
-## Motivation
-
 `Round loader` program is supposed to be the first one to deploy on `Solana` blockchain. The purpose of it is to save
 relays public keys for each round in different `Solana` accounts and prevent attackers to modify them or add fake relays. 
 This is done by two mechanics: 

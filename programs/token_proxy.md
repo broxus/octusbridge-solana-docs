@@ -1,7 +1,5 @@
 # Design
 
-## Motivation
-
 `Token proxy` program is the main program in bridge from `Solana` side. It owns root token and vault accounts and can
 make transfers, mints, burns tokens.
 
