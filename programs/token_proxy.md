@@ -45,7 +45,7 @@ It must store following:
 
 ## Common work
 
-Common work is divided into two big steps - deposit and withdraw. In both cases new PDA, storing all related info, is created. 
+Common work is divided into two big steps - deposit and withdrawal. In both cases new PDA, storing all related info, is created. 
 This allows relays to be always up-to-date with what is happening on `Solana` side.
 
 ### Deposit
@@ -78,15 +78,15 @@ This is the transfer from `Solana` to `Everscale`.
 * `Token root` account address
 * Decimals count in `Solana`
 
-### Withdraw
+### Withdrawal
 
 This is the transfer from `Everscale` to `Solana`. 
 
-#### `Everscale` tokens withdraw
+#### `Everscale` tokens withdrawal
 
 It can be divided into 2 parts. At first user created `Withdraw` account, then relays confirm that it is a real withdrawal.
 
-##### User withdraw creation
+##### User withdrawal creation
 
 1. User calls withdraw tokens from `Token root` account in `Solana` `Token Proxy` program, transferring payload.
 2. `Token proxy` program calculates `Settings` PDA address, fetches it and gets `Token root` account address.
@@ -109,7 +109,7 @@ relays round number from payload.
 
 ##### Approve over limit withdrawals algorithm
 
-1. Admin calls approve pending withdraw in `Solana` `Token Proxy` program.
+1. Admin calls approve pending withdrawal in `Solana` `Token Proxy` program.
 2. `Token proxy` program calculates `Settings` PDA address, fetches it and gets `Token root` account address, `Admin` account,
 `SPL token` program id.
 3. `Token proxy` checks admin account with the received once.
@@ -118,12 +118,12 @@ relays round number from payload.
 6. If all is ok, `Token proxy` program uses `SPL token` program address from settings and calls mint tokens on `SPL token` program
 7. `Token proxy` sets withdrawal state to `Processed`.
 
-#### `Solana` tokens withdraw
+#### `Solana` tokens withdrawal
 
 It can be divided into 2 main parts. At first user created `Withdraw` account, then relays confirm that it is real withdrawal.
 But in addition it must serve 5 more situations with vault.
 
-##### User withdraw creation
+##### User withdrawal creation
 
 1. User calls withdraw tokens from `Vault` account in `Solana` `Token Proxy` program, transferring payload.
 2. `Token proxy` program calculates `Settings` PDA address, fetches it and gets `Vault` account address.
@@ -148,7 +148,7 @@ But in addition it must serve 5 more situations with vault.
 
 ##### Approve over limit withdrawals algorithm
 
-1. Admin calls approve pending withdraw in `Solana` `Token Proxy` program.
+1. Admin calls approve pending withdrawal in `Solana` `Token Proxy` program.
 2. `Token proxy` program calculates `Settings` PDA address, fetches it and gets `Vault` account address, `Admin` account,
    `SPL token` program id.
 3. `Token proxy` checks admin account with the received once.
@@ -162,7 +162,7 @@ But in addition it must serve 5 more situations with vault.
 
 ##### Force pending withdrawal algorithm
 
-1. User calls force pending withdraw in `Solana` `Token Proxy` program.
+1. User calls force pending withdrawal in `Solana` `Token Proxy` program.
 2. `Token proxy` program calculates `Settings` PDA address, fetches it and gets `Vault` account address,
    `SPL token` program id.
 3. `Token proxy` fetches withdrawal account.
@@ -175,7 +175,7 @@ But in addition it must serve 5 more situations with vault.
 
 ##### Cancel pending withdrawal algorithm
 
-1. User calls cancel pending withdraw in `Solana` `Token Proxy` program.
+1. User calls cancel pending withdrawal in `Solana` `Token Proxy` program.
 2. `Token proxy` program calculates `Settings` PDA address, fetches it.
 3. `Token proxy` fetches withdrawal account.
 4. `Token proxy` checks relays confirmations, pending state.
@@ -188,7 +188,7 @@ But in addition it must serve 5 more situations with vault.
 User can set bounty for proceeding his pending withdrawal, in order to other users have motivation to fill it and receive
 bounty in `Everscale`.
 
-1. User calls add or change bounty for pending withdraw in `Solana` `Token Proxy` program, transferring new bounty size.
+1. User calls add or change bounty for pending withdrawal in `Solana` `Token Proxy` program, transferring new bounty size.
 2. `Token proxy` program calculates `Settings` PDA address, fetches it.
 3. `Token proxy` fetches withdrawal account.
 4. `Token proxy` checks relays confirmations, pending state.
@@ -197,7 +197,7 @@ bounty in `Everscale`.
 
 ##### Filling pending withdrawal algorithm
 
-1. User calls fill pending withdraw in `Solana` `Token Proxy` program, transferring payload.
+1. User calls fill pending withdrawal in `Solana` `Token Proxy` program, transferring payload.
 2. `Token proxy` program calculates `Settings` PDA address, fetches it and gets `Vault` account address,
    `SPL token` program id.
 3. `Token proxy` program fetches `Vault` account.
@@ -229,7 +229,7 @@ bounty in `Everscale`.
     * `Processed` - all funds were successfully transferred to user.
     * `Cancelled` - user asked to cancel withdrawal, his funds were minted in `Everscale` to his address back.
     * `Pending` - there is not enough funds on vault to process the withdrawal.
-    * `Waiting for approve` - withdraw amount is bigger than the limit
+    * `Waiting for approve` - withdrawal amount is bigger than the limit
 
 ## Methods
 
@@ -238,12 +238,12 @@ There are nine methods in the program:
 * Initialize
 * Deposit
 * Withdraw
-* Confirm withdraw
-* Approve pending withdraw
-* Force pending withdraw
-* Cancel pending withdraw
-* Change bounty for pending withdraw
-* Fill pending withdraw
+* Confirm withdrawal
+* Approve pending withdrawal
+* Force pending withdrawal
+* Cancel pending withdrawal
+* Change bounty for pending withdrawal
+* Fill pending withdrawal
 
 ## Upgrade
 
