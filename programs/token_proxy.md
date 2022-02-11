@@ -41,8 +41,9 @@ It must store following:
 ### Initialization
 
 1. Deployer of `Token proxy` program calls init method, providing settings data.
-2. `Round loader` program calculates `Settings` PDA address, checks that it is not created.
-3. `Round loader` program creates `Settings` PDA, storing data provided.
+2. `Token proxy` program calculates `Settings` PDA address, checks that it is not created.
+3. `Token proxy` program creates `Vault` PDA, if needed.
+4. `Token proxy` program creates `Settings` PDA, storing data provided.
 
 ## Common work
 
