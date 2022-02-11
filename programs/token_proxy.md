@@ -102,8 +102,9 @@ relays round number from payload.
 4. `Token Proxy` gets round relays info (public keys, addresses), checks that callers address is relay and ttl of the round is not expired.
 5. If all is ok, `Token Proxy` program saves relays approval to withdrawal account and checks if there are enough confirms.
 6. if there are enough confirms, `Token proxy` program checks that withdrawal amount is lower than limit from settings.
-7. If amount is lower, `Token proxy` program uses `SPL token` program address from settings and calls mint tokens on `SPL token` program
-and sets withdrawal state to `Processed`.
+7. If amount is lower:
+   1. `Token proxy` program uses `SPL token` program address from settings and calls mint tokens on `SPL token` program.
+   2. `Token proxy` program sets withdrawal state to `Processed`.
 8. If amount is bigger, `Token proxy` program sets withdrawal state to `Waiting for approve`.
 
 ##### Approve over limit withdrawals algorithm
@@ -115,7 +116,7 @@ and sets withdrawal state to `Processed`.
 4. `Token proxy` fetches withdrawal account.
 5. `Token proxy` checks relays confirmations and state.
 6. If all is ok, `Token proxy` program uses `SPL token` program address from settings and calls mint tokens on `SPL token` program
-and sets withdrawal state to `Processed`.
+7. `Token proxy` sets withdrawal state to `Processed`.
 
 #### `Solana` tokens withdraw
 
@@ -143,7 +144,7 @@ But in addition it must serve 5 more situations with vault.
 9. If amount is lower, `Token proxy` program checks that `Vault` account contains more than `Withdrawal` amount.
 10. If amount is bigger, `Token proxy` program sets withdrawal state to `Pending`.
 11. If amount is lower, `Token proxy` program uses `SPL token` program address from settings and calls transfer tokens on `SPL token` program
-    and sets withdrawal state to `Processed`.
+12. `Token proxy` sets withdrawal state to `Processed`.
 
 ##### Approve over limit withdrawals algorithm
 
@@ -156,8 +157,8 @@ But in addition it must serve 5 more situations with vault.
 6. `Token proxy` fetches vault account.
 7. If all is ok,`Token proxy` program checks that `Vault` account contains more than `Withdrawal` amount.
 8. If amount is bigger, `Token proxy` program sets withdrawal state to `Pending`.
-9. If amount is lower, `Token proxy` program uses `SPL token` program address from settings and calls transfer tokens on `SPL token` program
-   and sets withdrawal state to `Processed`.
+9. If amount is lower, `Token proxy` program uses `SPL token` program address from settings and calls transfer tokens on `SPL token` program.
+10. `Token proxy` sets withdrawal state to `Processed`.
 
 ##### Force pending withdrawal algorithm
 
