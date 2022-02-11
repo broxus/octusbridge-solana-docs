@@ -1,4 +1,4 @@
-# Proposal #1
+# Design
 
 ## Motivation
 
@@ -244,3 +244,9 @@ There are nine methods in the program:
 * Cancel pending withdraw
 * Change bounty for pending withdraw
 * Fill pending withdraw
+
+## Upgrade
+
+Deployer of `Token proxy` program can upgrade code via BPF loader at any time, using his keys pair. It would replace
+old program with the new one, but address will remain the same. So deployer keys must be stored very caution. Maybe
+the best here is to use multi-signature account.

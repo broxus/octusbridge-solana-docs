@@ -1,4 +1,4 @@
-# Proposal #1
+# Design
 
 ## Motivation
 
