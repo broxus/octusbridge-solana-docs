@@ -48,7 +48,7 @@ It must store following:
 ## Common work
 
 Common work is divided into two big steps - deposit and withdraw. In both cases new PDA, storing all related info, is created. 
-This allows relays to be always up to time with what is happening on `Solana` side.
+This allows relays to be always up-to-date with what is happening on `Solana` side.
 
 ### Deposit
 
