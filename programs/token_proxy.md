@@ -24,6 +24,7 @@ token name as seed phrase along with program id.
 ### Settings account
 
 It must store following:
+* Token name
 * Token Type: `Ever` or `Solana`
 * Token address - In case of `Ever` it is `Token root` address, in case of `Solana` - `Vault` account address.
 * Admin account - Account address that would allow approving big withdrawals
