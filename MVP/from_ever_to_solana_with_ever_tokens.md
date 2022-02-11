@@ -53,7 +53,7 @@ Mint algorithm
 6. `Token proxy` creates unique withdraw account with payload from event.
 7. Relays get callback from `Token proxy` program about new withdrawal.
 8. Relays send confirm withdrawal to `Token proxy`, containing payload from `Everscale`.
-9. `Token Proxy` gets requested round relays info (public keys, addresses), checks that callers address is relay and round is not expired.
+9. `Token Proxy` gets round relays info (public keys, addresses), checks that callers address is relay and round is not expired.
 10. If all is ok, `Token Proxy` program saves relays approval to withdrawal account and checks if there are enough confirms. 
 11. if there are enough confirms, `Token proxy` program calls mint tokens on `SPL token` program.
 12. `SPL token` program mints tokens and increases users balance.

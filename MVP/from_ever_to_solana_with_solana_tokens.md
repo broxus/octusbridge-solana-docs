@@ -71,19 +71,24 @@ Standard withdrawal algorithm
 ### Withdraw account
 
 Withdraw account is containing following:
-* Round number
-* Receiver address in `Solana`
-* Sender address in `Everscale`
-* Amount
 * Payload Id
+* Relays round number
+* Sender address in `Everscale`
+* Receiver address in `Solana`
+* Amount
+* `Token root` account address in `Everscale`
+* Decimals count in `Everscale`
+* Decimals count in `Solana`
+* Confirmed Relays
 * Bounty for withdrawal
+* Minimum Number of confirmation to be processed
 * State: new, expired, processed, cancelled, pending, waiting for approve
-    * `New` is needed to save relays confirms.
-    * `Expired` - current round ttl is expired and withdrawal can not be processed.
-    * `Processed` - all funds were successfully transferred to user.
-    * `Cancelled` - user asked to cancel withdrawal, his funds were minted in `Everscale` to his address back.
-    * `Pending` - there is not enough funds on vault to process the withdrawal.
-    * `Waiting for approve` - withdraw amount is bigger than the limit
+  * `New` is needed to save relays confirms.
+  * `Expired` - current round ttl is expired and withdrawal can not be processed.
+  * `Processed` - all funds were successfully transferred to user.
+  * `Cancelled` - user asked to cancel withdrawal, his funds were minted in `Everscale` to his address back.
+  * `Pending` - there is not enough funds on vault to process the withdrawal.
+  * `Waiting for approve` - withdraw amount is bigger than the limit
 
 ## Scheme
 
@@ -139,7 +144,7 @@ in `Everscale`. So he creates corresponding transfer of tokens from `Solana` to 
 All withdrawals that exceeds limits will be stuck in `Waiting for approve` state. In that case admin key is used to approve
 this withdrawal.
 
-1. Admin calls approve pending withdraw in `Solana` `Token Proxy` program, transferring payload.
+1. Admin calls approve pending withdraw in `Solana` `Token Proxy` program.
 2. `Token proxy` checks existence of withdraw account, relays confirmations, state.
 3. `Token proxy` checks admin key for correctness.
 4. `Token proxy` changes state to `Pending` for withdrawal.
