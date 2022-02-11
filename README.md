@@ -1,6 +1,6 @@
-# Motivation
+# Design
 
-Each step design is presented in draw.io format in current repo with corresponding docs.
+Each design step is presented in draw.io format in current repo with corresponding docs.
 
 In the beginning the main idea was to create `Token Proxy` ([Doc](../programs/token_proxy.md)) and `Round loader` ([Doc](../programs/round_loader.md)) programs and `Vault` and `Token Root` accounts in `Solana` 
 and to use the same principles in `Everscale` as for `Ethereum`, `BSC`, ... 
@@ -12,25 +12,25 @@ tokens from `Everscale` to `Solana`.
 
 MVP includes transfer tokens from (to) `Solana` to (from) `Everscale` and contains 5 big steps.
 
-1. Load new round relays from `Everscale` to `Solana`. [Doc](../MVP/relays_round_loading.md)
-2. Transfer `Everscale` tokens from `Everscale` to `Solana`. [Doc](../MVP/from_ever_to_solana_with_ever_tokens.md)
-3. Transfer `Solana` tokens from `Everscale` to `Solana`. [Doc](../MVP/from_ever_to_solana_with_solana_tokens.md)
+1. Load new round relays from `Everscale` to `Solana`. ([Doc](../MVP/relays_round_loading.md))
+2. Transfer `Everscale` tokens from `Everscale` to `Solana`. ([Doc](../MVP/from_ever_to_solana_with_ever_tokens.md))
+3. Transfer `Solana` tokens from `Everscale` to `Solana`. ([Doc](../MVP/from_ever_to_solana_with_solana_tokens.md))
    1. Transfer tokens from vault, when there is enough funds.
-   2. Force pending withdraw. The case when it was not enough on withdraw occurred, but someone has fulfilled the vault.
+   2. Force pending withdraw. The case, when it was not enough funds on vault account, and someone replenished it.
    3. Cancel pending withdraw.
-   4. Add/Change bounty to pending withdraw.
-   5. Fill pending withdraw, that has bounty reward for it.
-   6. Approve withdrawals over limit
-4. Transfer `Everscale` tokens from `Solana` to `Everscale`. [Doc](../MVP/from_solana_to_ever_with_ever_tokens.md)
-5. Transfer `Solana` tokens from `Solana` to `Everscale`. [Doc](../MVP/from_solana_to_ever_with_solana_tokens.md)
+   4. Change bounty of pending withdraw.
+   5. Fill pending withdraw.
+   6. Approve big amount withdrawals.
+4. Transfer `Everscale` tokens from `Solana` to `Everscale`. ([Doc](../MVP/from_solana_to_ever_with_ever_tokens.md))
+5. Transfer `Solana` tokens from `Solana` to `Everscale`. ([Doc](../MVP/from_solana_to_ever_with_solana_tokens.md))
 
 ## II Stage
 
-II Stage includes transfer tokens from `Solana` to `Everscale` with the use of credits processor in `Everscale`. [Doc](../Stage 2/from_solana_to_ever_with_solana_tokens_2_stage.md)
+II Stage includes transfer tokens from `Solana` to `Everscale` with the use of credits processor in `Everscale`. ([Doc](../Stage 2/from_solana_to_ever_with_solana_tokens_2_stage.md))
 
 ## III Stage
 
-III Stage includes transfer locked in `Solana` tokens to different protocols in `Solana` to earn on them. [Doc](../Stage 3/transfer_liquidity_in_solana_to_protocol_3_stage.md)
+III Stage includes transfer locked in `Solana` tokens to different protocols in `Solana` to earn on them. ([Doc](../Stage 3/transfer_liquidity_in_solana_to_protocol_3_stage.md))
 
 # Questions
 
@@ -52,7 +52,7 @@ We can just take the same keys.
 7. How to defend from big loss in case of emergency situation?
 We can use limits and manual approve of withdrawals from `Everscale` to `Solana` that are bigger than that limits.
 8. Who can approve over limits withdrawals?
-It can be multisig in `Everscale` or `Solana`. In first case approve event will be transferred through bridge.
+It can be multi-signature in `Everscale` or `Solana`. In the first case approve event must be transferred through bridge.
 
 # Reminders for developers
 
