@@ -5,43 +5,45 @@ make transfers, mints, burns tokens.
 
 ## Deploy
 
-There is an issue with `Root token` account. It can not be made as PDA via `SPL token` program. So it must be deployed first,
-then, after `Token proxy` program is deployed, the ownership of `Root token` account must be transferred to `Token proxy` program.
+There is an issue with `Root token` account and `Vault` account. They can not be made as PDA via `SPL token` program. So they must be deployed first,
+then, after `Token proxy` program is deployed, the ownership of the `Root token` account or the `Vault` account must be transferred to `Token proxy` program.
 It is manual operation and one shouldn't forget about it!
 
-Another important notice here is that `Token proxy` program must be deployed after `Round loader` program. This is needed
-to save `Round loader` program id in `Token proxy` program `Settings` PDA.
+Another important notice here is that `Token proxy` program must be deployed after `Round loader` program, because `Token proxy`
+uses it to derive relays round account address.
 
 ## Start
 
 In order to start working `Token proxy` must be initialized. Here is two options: to use vault and to use token root. It
 depends on what kind of token this proxy needs to maintain. In case of `Everscale` token, it works with `Token root` account,
-so its address must be stored in `Settings` account. In case of `Solana` token, it creates `Vault` account as PDA using 
-token name as seed phrase along with program id.
+so its address must be stored in `Settings` account. In case of `Solana` token, it uses `Vault` account.
 
 ### Settings account
 
 It must store following:
 * Token name
 * Token Type: `Ever` or `Solana`
-* Token address - In case of `Ever` it is `Token root` address, in case of `Solana` - `Vault` account address.
-* Admin account - Account address that would allow approving big withdrawals
-* `Round loader` program id
-* `SPL token` program id
+* Token address - In case of `Ever` it is `Token root` account address, in case of `Solana` - `Vault` account address.
+* Admin account - Account address that would allow approving big withdrawals.
+* Withdrawals limit - Max auto withdrawals amount.
+* Deposit limit - Max vault amount limit for `Solana` tokens deposit. In order not to lose a lot of funds in case of non-consistent work
+the max deposit limit can be set.
+* Decimals - Number of base 10 digits to the right of the decimal place.
 
 ### Vault account
 
-`Vault` account contains:
+`Vault` account contains is created via `InitializeAccount` instruction from `SPL token` program and contains:
 * Amount
-* `Token root` account address
-* Decimals count
+
+### Token root account
+
+`Token root` is also named `Mint` account in `Solana`. It is created via `InitializeMint` instruction from `SPL token` program.
 
 ### Initialization
 
 1. Deployer of `Token proxy` program calls init method, providing settings data.
 2. `Token proxy` program calculates `Settings` PDA address, checks that it is not created.
-3. `Token proxy` program creates `Vault` PDA, if needed.
-4. `Token proxy` program creates `Settings` PDA, storing data provided.
+3. `Token proxy` program creates `Settings` PDA, storing data provided.
 
 ## Common work
 
@@ -65,8 +67,9 @@ This is the transfer from `Solana` to `Everscale`.
 1. User calls deposit method of `Token proxy` program.
 2. `Token proxy` program calculates `Settings` PDA address, fetches it and gets `Vault` account address.
 3. `Token proxy` program fetches `Vault` account.
-4. It uses `SPL token` program address from settings to call transfer users tokens from users account to `Vault` account.
-5. `Token proxy` program creates `Deposit` PDA.
+4. `Token proxy` program checks that Vault amount plus deposit amount is not bigger than deposit limit.
+5. It uses `SPL token` program address from settings to call transfer users tokens from users account to `Vault` account.
+6. `Token proxy` program creates `Deposit` PDA.
 
 #### Deposit account
 
