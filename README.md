@@ -1,4 +1,13 @@
-# Design
+# Why Solana?
+
+`Solana` has more than 300 dApps, with more than 10b dollars locked. It's good to add tha ability to transfer funds
+to or from `Solana`. More can be read [here](https://docs.solana.com/ru/introduction#why-solana).
+
+# What is Solana?
+
+Can be read [here](https://docs.solana.com/ru/introduction#what-is-solana).
+
+# Bridge design
 
 Each design step is presented in draw.io format in current repo with corresponding docs.
 
