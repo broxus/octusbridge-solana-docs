@@ -33,6 +33,10 @@ The MVP provides the ability to transfer tokens from (to) `Solana` to (from) `Ev
 4. Transfer `Everscale` tokens from `Solana` to `Everscale`. ([Doc](../MVP/from_solana_to_ever_with_ever_tokens.md))
 5. Transfer `Solana` tokens from `Solana` to `Everscale`. ([Doc](../MVP/from_solana_to_ever_with_solana_tokens.md))
 
+## Relays
+
+Relays will support `Solana` as long as `Everscale` and `Ethereum` and its forks. ([Doc](../relays/relay.md))
+
 ## Stage II
 
 Stage II allows users to transfer tokens from `Solana` to `Everscale` with the use of credits processor in `Everscale`. ([Doc](../Stage 2/from_solana_to_ever_with_solana_tokens_2_stage.md))
