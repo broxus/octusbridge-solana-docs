@@ -2,34 +2,34 @@
 
 ## Motivation
 
-Bridge `Solana-Everscale` must have the ability to transfer `Solana` tokens from `Everscale` to `Solana`. The idea here is
-to use vault owned by `Token proxy` program in `Solana` blockchain to unlock tokens.
+The `Solana-Everscale` bridge must have the ability to transfer `Solana` tokens from `Everscale` to `Solana`. The idea here is
+to use the vault owned by the `Token proxy` program in the `Solana` blockchain to unlock tokens.
 
 ## Algorithm
 
-1. `Everscale` `Token proxy` burns user tokens after Web3 request.
-2. `Token proxy` sends new event to `Ever event config`.
-3. `Ever event config` deploys new `Ever event` with payload containing transfer.
-4. Relays confirm `Ever event`.
-5. User calls withdraw tokens from vault in `Solana` `Token Proxy` program transferring payload with relays signs.
-6. `Token Proxy` program calls `Round loader` program to check relays signs.
-7. `Round loader` program gets current round relays info (public keys, addresses) and checks signs.
-8. If no error got from `Round loader` program, then `Token proxy` creates unique withdraw account with `PayloadId` from event.
-9. If no withdraw account was created before, then `Token proxy` program calls transfer tokens on `SPL token` program.
-10. `SPL token` program decreases `Vault` account tokens and increases users tokens balance.
+1. The `Everscale` `Token proxy` burns user tokens after Web3 request.
+2. The `Token proxy` sends new event to the `Ever event config`.
+3. The `Ever event config` deploys new `Ever event` with payload containing transfer.
+4. Relays confirm the `Ever event`.
+5. User calls withdraw tokens from vault in the `Solana` `Token Proxy` program transferring the payload with relays signs.
+6. The `Token Proxy` program calls the `Round loader` program to check relays signs.
+7. The `Round loader` program gets current round relays info (public keys, addresses) and checks signs.
+8. If there are no errors wuth the `Round loader` program, then the `Token proxy` creates unique withdraw account with a `PayloadId` from the event.
+9. If a withdrawal account was not created before, then the `Token proxy` program calls transfer tokens on the `SPL token` program.
+10. The `SPL token` program decreases `Vault` account tokens and increases users tokens balance.
 
 ## Questions
 
-1. Where to store `Vault` account address?
-It will be passed on program input by user, and it must be validated in `Token proxy` program.
-2. Where to store `Round loader` program address?
-It will be passed on program input by user, and it must be validated in `Token proxy` program.
-3. Where to store `Current round relays` account address?
-It will be passed on program input by user, and it must be validated in `Round loader` program.
+1. Where to store the `Vault` account address?
+It will be passed on program input by the user, and it must be validated in the `Token proxy` program.
+2. Where to store the `Round loader` program address?
+It will be passed on program input by the user, and it must be validated in the `Token proxy` program.
+3. Where to store the `Current round relays` account address?
+It will be passed on program input by the user, and it must be validated in the `Round loader` program.
 
 ## Reminders
 
-1. Set owner of `Vault` account to `Token proxy` program.
+* Set owner of the `Vault` account to the `Token proxy` program.
 
 ## Scheme
 
@@ -37,40 +37,40 @@ It will be passed on program input by user, and it must be validated in `Round l
 
 ## Issues
 
-The main issue of this scheme is that user must pass all relays signs in transaction of creating withdrawal in `Solana`.
-They do not fit the max size of client transaction, and user have to us batching, signing every part with his keys.
+The main issue of this scheme is that the user must pass all relays signs when creating a withdrawal on `Solana`. 
+The relays signs do not fit the max size for client transactions, and the user has to engage in batching, signing every part with his keys.
 
 # Proposal #2
 
 ## Motivation
 
-As it has been described in `Relay round loading` proposal #2 we do not need to check signatures in programs, because 
-we always know who is calling its in `Solana`. So this is the first modification. Another one is that we can avoid loading
-all relays approvals from user side, because they can themselves confirm withdrawal in `Solana`.
+As described in `Relay round loading` proposal #2, we do not need to check signatures in programs, because we always know 
+who is calling when it’s on `Solana`. So this is the first modification. Another one is that we can avoid loading 
+all relays approvals on the user side, because they can confirm withdrawals themselves on `Solana`.
 
 ## Withdrawal Algorithm
 
 Standard withdrawal algorithm
 
-1. `Everscale` `Token proxy` burns user tokens after Web3 request.
-2. `Token proxy` sends new event to `Ever event config`.
-3. `Ever event config` deploys new `Ever event` with payload containing transfer.
-4. Relays get info from `Ever event`, containing all withdrawal payload.
-5. User calls withdraw tokens from vault in `Solana` `Token Proxy` program, transferring payload.
-6. `Token proxy` creates unique withdraw account with payload from event.
-7. Relays get callback from `Token proxy` program about new withdrawal.
-8. Relays send confirm withdrawal to `Token proxy`, containing payload from `Everscale`.
-9. `Token Proxy` gets requested round relays info (public keys, addresses), checks that callers address is relay and round is not expired.
-10. If all is ok, `Token Proxy` program saves relays approval to withdrawal account and checks if there are enough confirms.
-11. `Token proxy` checks that withdrawal amount is below the limit. In other case it changes state to `Waiting for approve`.
-12. `Token proxy` checks vault balance. 
-13. If balance is enough, `Token proxy` program calls transfer tokens on `SPL token` program.
-14. `SPL token` program decreases `Vault` account tokens and increases users tokens balance.
-15. `Token proxy` sets state to `Processed`.
+1. The `Everscale` `Token proxy` burns user tokens after Web3 request.
+2. The `Token proxy` sends new event to `Ever event config`.
+3. The `Ever event config` deploys the new `Ever event` with a payload containing transfer.
+4. Relays get info from the `Ever event`, containing the entire withdrawal payload.
+5. User calls withdraw tokens from the vault in the `Solana` `Token Proxy` program, transferring the payload.
+6. The `Token proxy` creates a unique withdrawal account with the payload from the event.
+7. Relays get callback from `Token proxy` program about a new withdrawal.
+8. Relays send confirm withdrawal to the `Token proxy`, containing the payload from `Everscale`.
+9. The `Token Proxy` gets requested round relays info (public keys, addresses), checks that callers address is the relay and the round is not expired.
+10. If all is ok, the `Token Proxy` program saves relays approval to the withdrawal account and checks if there are enough confirms.
+11. The `Token proxy` checks that the withdrawal amount is below the limit. If that is not the case it changes the status to `Waiting for approve`.
+12. The `Token proxy` checks the vault balance. 
+13. If the balance is enough, the `Token proxy` program calls transfer tokens on the `SPL token` program.
+14. The `SPL token` program decreases the amount of `Vault` account tokens and increases the user's tokens balance.
+15. The `Token proxy` sets the status to `Processed`.
 
-### Withdraw account
+### Withdrawal account
 
-Withdraw account is containing following:
+Withdrawal accounts contain the following:
 * Payload Id
 * Relays round number
 * Sender address in `Everscale`
@@ -83,12 +83,12 @@ Withdraw account is containing following:
 * Bounty for withdrawal
 * Minimum Number of confirmation to be processed
 * State: new, expired, processed, cancelled, pending, waiting for approve
-  * `New` is needed to save relays confirms.
-  * `Expired` - current round ttl is expired and withdrawal can not be processed.
+  * `New` relays confirmations needed to be saved.
+  * `Expired` - current round ttl has expired and the withdrawal can not be processed.
   * `Processed` - all funds were successfully transferred to user.
-  * `Cancelled` - user asked to cancel withdrawal, his funds were minted in `Everscale` to his address back.
-  * `Pending` - there is not enough funds on vault to process the withdrawal.
-  * `Waiting for approve` - withdraw amount is bigger than the limit
+  * `Cancelled` - the user asked to cancel the withdrawal, his funds were minted back to his `Everscale` address.
+  * `Pending` - there are not enough funds in the vault to process the withdrawal.
+  * `Waiting for approve` - the withdrawal amount is bigger than the limit.
 
 ## Scheme
 
@@ -96,60 +96,60 @@ Withdraw account is containing following:
 
 ## Force pending withdrawal algorithm
 
-User can force his withdrawal in pending state when he sees that vault balance is enough.
+A user can force his pending withdrawal when he sees that the vault balance is enough.
 
-1. User calls force pending withdraw in `Solana` `Token Proxy` program, transferring payload.
-2. `Token proxy` checks existence of withdraw account, relays confirmations, pending state.
-3. `Token proxy` checks vault balance.
-4. If balance is enough, `Token proxy` program calls transfer tokens on `SPL token` program.
-5. `SPL token` program decreases `Vault` account tokens and increases users tokens balance.
+1. The User calls force pending withdraw in the `Solana` `Token Proxy` program, transferring the payload.
+2. The `Token proxy` verifies the existence of the withdrawal account, relays confirmations and pending status.
+3. The `Token proxy` checks the vault balance.
+4. If the balance is enough, the `Token proxy` program calls transfer tokens on the `SPL token` program.
+5. The `SPL token` program decreases the amount of `Vault` account tokens and increases the user’s token balance.
 
 ## Cancel pending withdrawal algorithm
 
-User can cancel his withdrawal in pending state when he wants to decline it.
+A user can cancel his pending withdrawal if he wants to decline it.
 
-1. User calls cancel pending withdraw in `Solana` `Token Proxy` program, transferring payload.
-2. `Token proxy` checks existence of withdraw account, relays confirmations, pending state.
-3. `Token proxy` sets withdrawal state as cancelled.
-4. `Token proxy` creates `Deposit` PDA, containing mirrored data from withdrawal account, as like the user transferred 
-funds in opposite direction.
-5. Relays are monitoring this transaction and begin transferring procedure from `Solana` to `Everscale` (this is described in corresponding chapter).
+1. The User calls cancel pending withdrawal in the `Solana` `Token Proxy` program, transferring the payload.
+2. The `Token proxy` verifies the existence of the withdrawal account, relays confirmations, pending status.
+3. The `Token proxy` sets the withdrawal status to cancelled.
+4. The `Token proxy` creates `Deposit` PDA, containing mirrored data from the withdrawal account, as if the user were 
+transferring funds in the opposite direction.
+5. Relays monitor this transaction and begin the transferring procedure from `Solana` to `Everscale` (this is described in the corresponding chapter).
 
 ## Add / change bounty for pending withdrawal algorithm
 
-User can set bounty for proceeding his pending withdrawal, in order to other users have motivation to fill it and receive
-bounty in `Everscale`.
+A user can set a bounty for processing his pending withdrawal, thereby providing other users with motivation to fill it 
+and receive a bounty in `Everscale`.
 
-1. User calls add or change bounty for pending withdraw in `Solana` `Token Proxy` program, transferring payload and bounty size.
-2. `Token proxy` checks existence of withdraw account, relays confirmations, pending state.
-3. `Token proxy` checks that bounty size is lower than amount in withdrawal.
-4. `Token proxy` changes bounty size in withdrawal account.
+1. The User calls add or change bounty for pending withdrawal in the `Solana` `Token Proxy` program, transferring the payload and the bounty size.
+2. The `Token proxy` verifies the existence of the withdrawal account, relays confirmations, pending status.
+3. The `Token proxy` checks that the bounty size is lower than the amount of the withdrawal.
+4. The `Token proxy` changes the bounty size in withdrawal account.
 
 ## Filling pending withdrawal algorithm
 
-User from `Solana` side of the bridge can see that for filling withdrawal from `Everscale` side he can receive bounty
-in `Everscale`. So he creates corresponding transfer of tokens from `Solana` to `Everscale`.
+A user from the `Solana` side of the bridge can see that by filling a withdrawal from the `Everscale` side he can receive a bounty
+in `Everscale`. So he creates a corresponding transfer of tokens from `Solana` to `Everscale`.
 
-1. User calls fill pending withdraw in `Solana` `Token Proxy` program, transferring payload.
-2. `Token proxy` checks existence of withdraw account, relays confirmations, pending state.
-3. `Token proxy` checks that users balance is bigger than amount in withdrawal minus bounty.
-4. `Token proxy` program calls transfer tokens (withdrawal amount minus bounty) on `SPL token` program.
-5. `SPL token` program decreases users account tokens and increases withdrawal receiver tokens balance.
-6. `Token proxy` creates `Deposit` PDA, containing mirrored data from withdrawal account, as like the user transferred
-   all funds in opposite direction.
-7. Relays are monitoring this transaction and begin transferring procedure from `Solana` to `Everscale` (this is described in corresponding chapter).
+1. The user calls fill pending withdraw in the `Solana` `Token Proxy` program, transferring the payload.
+2. The `Token proxy` verifies the existence of the withdrawal account, relays confirmations, pending status.
+3. The `Token proxy` checks that users balance is bigger than the amount of the withdrawal minus the bounty.
+4. The `Token proxy` program calls transfer tokens (withdrawal amount minus the bounty) on the `SPL token` program.
+5. The `SPL token` program decreases the user’s account tokens and increases the receiver of the withdrawal’s token balance.
+6. The `Token proxy` creates a `Deposit` PDA, containing mirrored data from the withdrawal account, as if the user 
+transferred all funds in the opposite direction.
+7. Relays monitor this transaction and begin the transferring procedure from `Solana` to `Everscale` (this is described in the corresponding chapter).
 
 ## Approve over limit withdrawals algorithm
 
-All withdrawals that exceeds limits will be stuck in `Waiting for approve` state. In that case admin key is used to approve
-this withdrawal.
+All withdrawals that exceed limits will get stuck in the `Waiting for approve` status. When this happens, the admin key 
+is used to approve this withdrawal.
 
-1. Admin calls approve pending withdraw in `Solana` `Token Proxy` program.
-2. `Token proxy` checks existence of withdraw account, relays confirmations, state.
-3. `Token proxy` checks admin key for correctness.
-4. `Token proxy` changes state to `Pending` for withdrawal.
-5. `Token proxy` checks vault balance.
-6. If balance is enough, `Token proxy` program calls transfer tokens on `SPL token` program.
-7. `SPL token` program decreases `Vault` account tokens and increases users tokens balance.
-15. `Token proxy` sets state to `Processed`.
+1. The Admin calls approve pending withdraw in the `Solana` `Token Proxy` program.
+2. The `Token proxy` verifies the existence of the withdrawal account, relays confirmations, status.
+3. The `Token proxy` checks the admin key for correctness.
+4. The `Token proxy` changes the status to `Pending` for withdrawal.
+5. The `Token proxy` checks the vault balance.
+6. If the balance is enough, the `Token proxy` program calls transfer tokens on the `SPL token` program.
+7. The `SPL token` program decreases the amount of the `Vault` account tokens and increases the user’s token balance.
+8. The `Token proxy` sets the status to `Processed`.
 
