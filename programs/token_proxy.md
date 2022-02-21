@@ -29,6 +29,7 @@ It must store following:
 * Deposit limit - Max vault amount limit for `Solana` tokens deposit. In order not to lose a lot of funds in case of non-consistent work
 the max deposit limit can be set.
 * Decimals - Number of base 10 digits to the right of the decimal place.
+* Emergency mode - The mode that denies all deposits and withdrawals.
 
 ### Vault account
 
@@ -59,8 +60,9 @@ This is the transfer from `Solana` to `Everscale`.
 1. User calls deposit method of `Token proxy` program.
 2. `Token proxy` program calculates `Settings` PDA address, fetches it and gets `Token root` account address.
 3. `Token proxy` program fetches `Token root` account.
-4. It uses `SPL token` program address from settings to call burn users tokens.
-5. `Token proxy` program creates `Deposit` PDA.
+4. `Token proxy` program checks that emergency mode is off.
+5. It uses `SPL token` program address from settings to call burn users tokens.
+6. `Token proxy` program creates `Deposit` PDA.
 
 #### `Solana` tokens deposit
 
