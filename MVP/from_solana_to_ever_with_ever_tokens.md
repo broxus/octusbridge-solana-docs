@@ -37,4 +37,4 @@ Between steps 4 and 5 `Token proxy` program should create such one.
 
 Deposit model is the same as for `Solana` tokens from `Solana` to `Everscale` transfer.
 
-It will not have any state because we assume that it is created when user funds was successfully burned.
+It will not have any status because we assume that it is created when user funds was successfully burned.

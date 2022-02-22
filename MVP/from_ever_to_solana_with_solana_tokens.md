@@ -82,7 +82,7 @@ Withdrawal accounts contain the following:
 * Confirmed Relays
 * Bounty for withdrawal
 * Minimum Number of confirmation to be processed
-* State: new, expired, processed, cancelled, pending, waiting for approve
+* Status: new, expired, processed, cancelled, pending, waiting for approve
   * `New` relays confirmations needed to be saved.
   * `Expired` - current round ttl has expired and the withdrawal can not be processed.
   * `Processed` - all funds were successfully transferred to user.

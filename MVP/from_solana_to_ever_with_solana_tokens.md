@@ -41,4 +41,4 @@ Deposit account must contain following fields:
 * `Token root` account address
 * Decimals count
 
-It will not have any state because we assume that it is created when user has successfully deposited his funds to the vault.
+It will not have any status because we assume that it is created when user has successfully deposited his funds to the vault.
