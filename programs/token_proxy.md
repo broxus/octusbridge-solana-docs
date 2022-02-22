@@ -220,6 +220,7 @@ bounty in `Everscale`.
 #### Withdraw account
 
 `Withdraw` account contains:
+* Author
 * Payload Id
 * Relays round number
 * Sender address in `Everscale`
