@@ -69,9 +69,10 @@ This is the transfer from `Solana` to `Everscale`.
 1. User calls deposit method of `Token proxy` program.
 2. `Token proxy` program calculates `Settings` PDA address, fetches it and gets `Vault` account address.
 3. `Token proxy` program fetches `Vault` account.
-4. `Token proxy` program checks that Vault amount plus deposit amount is not bigger than deposit limit.
-5. It uses `SPL token` program address from settings to call transfer users tokens from users account to `Vault` account.
-6. `Token proxy` program creates `Deposit` PDA.
+4. `Token proxy` program checks that emergency mode is off.
+5. `Token proxy` program checks that Vault amount plus deposit amount is not bigger than deposit limit.
+6. It uses `SPL token` program address from settings to call transfer users tokens from users account to `Vault` account.
+7. `Token proxy` program creates `Deposit` PDA.
 
 #### Deposit account
 
@@ -117,11 +118,12 @@ relays round number from payload.
 1. Admin calls approve pending withdrawal in `Solana` `Token Proxy` program.
 2. `Token proxy` program calculates `Settings` PDA address, fetches it and gets `Token root` account address, `Admin` account,
 `SPL token` program id.
-3. `Token proxy` checks admin account with the received once.
-4. `Token proxy` fetches withdrawal account.
-5. `Token proxy` checks relays confirmations and state.
-6. If all is ok, `Token proxy` program uses `SPL token` program address from settings and calls mint tokens on `SPL token` program
-7. `Token proxy` sets withdrawal state to `Processed`.
+3. `Token proxy` program checks that emergency mode is off.
+4. `Token proxy` checks admin account with the received once.
+5. `Token proxy` fetches withdrawal account.
+6. `Token proxy` checks relays confirmations and state.
+7. If all is ok, `Token proxy` program uses `SPL token` program address from settings and calls mint tokens on `SPL token` program
+8. `Token proxy` sets withdrawal state to `Processed`.
 
 #### `Solana` tokens withdrawal
 
@@ -156,14 +158,15 @@ But in addition it must serve 5 more situations with vault.
 1. Admin calls approve pending withdrawal in `Solana` `Token Proxy` program.
 2. `Token proxy` program calculates `Settings` PDA address, fetches it and gets `Vault` account address, `Admin` account,
    `SPL token` program id.
-3. `Token proxy` checks admin account with the received once.
-4. `Token proxy` fetches withdrawal account.
-5. `Token proxy` checks relays confirmations and state.
-6. `Token proxy` fetches vault account.
-7. If all is ok,`Token proxy` program checks that `Vault` account contains more than `Withdrawal` amount.
-8. If amount is bigger, `Token proxy` program sets withdrawal state to `Pending`.
-9. If amount is lower, `Token proxy` program uses `SPL token` program address from settings and calls transfer tokens on `SPL token` program.
-10. `Token proxy` sets withdrawal state to `Processed`.
+3. `Token proxy` program checks that emergency mode is off.
+4. `Token proxy` checks admin account with the received once.
+5. `Token proxy` fetches withdrawal account.
+6. `Token proxy` checks relays confirmations and state.
+7. `Token proxy` fetches vault account.
+8. If all is ok,`Token proxy` program checks that `Vault` account contains more than `Withdrawal` amount.
+9. If amount is bigger, `Token proxy` program sets withdrawal state to `Pending`.
+10. If amount is lower, `Token proxy` program uses `SPL token` program address from settings and calls transfer tokens on `SPL token` program.
+11. `Token proxy` sets withdrawal state to `Processed`.
 
 ##### Force pending withdrawal algorithm
 
