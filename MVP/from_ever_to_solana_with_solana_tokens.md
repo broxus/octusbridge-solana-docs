@@ -26,6 +26,10 @@ It will be passed on program input by the user, and it must be validated in the 
 It will be passed on program input by the user, and it must be validated in the `Token proxy` program.
 3. Where to store the `Current round relays` account address?
 It will be passed on program input by the user, and it must be validated in the `Round loader` program.
+4. Is it needed to separate confirm withdraw by relays to two parts:
+   1. Relay's confrim.
+   2. Mint tokens to user.
+   In that case relay will pay for the confirm and user can pay for the mint.
 
 ## Reminders
 
