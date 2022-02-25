@@ -107,11 +107,14 @@ It can be divided into 2 parts. At first user created `Withdraw` account, then r
 relays round number from payload.
 4. `Token Proxy` gets round relays info (public keys, addresses), checks that callers address is relay and ttl of the round is not expired.
 5. If all is ok, `Token Proxy` program saves relays approval to withdrawal account and checks if there are enough confirms.
-6. if there are enough confirms, `Token proxy` program checks that withdrawal amount is lower than limit from settings.
-7. If amount is lower:
+
+##### Withdrawal process
+
+1. if there are enough confirms, `Token proxy` program checks that withdrawal amount is lower than limit from settings.
+2. If amount is lower:
    1. `Token proxy` program uses `SPL token` program address from settings and calls mint tokens on `SPL token` program.
    2. `Token proxy` program sets withdrawal status to `Processed`.
-8. If amount is bigger, `Token proxy` program sets withdrawal status to `Waiting for approve`.
+3. If amount is bigger, `Token proxy` program sets withdrawal status to `Waiting for approve`.
 
 ##### Approve over limit withdrawals algorithm
 
@@ -144,14 +147,17 @@ But in addition it must serve 5 more situations with vault.
 3. `Token proxy` program calculates `Relays round` account, using seed, derived from `Relay loader` program id and
    relays round number from payload.
 4. `Token Proxy` gets round relays info (public keys, addresses), checks that callers address is relay and ttl of the round is not expired.
-5. If all is ok, `Token Proxy` program saves relays approval to withdrawal account and checks if there are enough confirms.
-6. if there are enough confirms, `Token proxy` program checks that withdrawal amount is lower than limit from settings.
-7. If amount is bigger, `Token proxy` program sets withdrawal status to `Waiting for approve`.
-8. `Token proxy` fetches vault account.
-9. If amount is lower, `Token proxy` program checks that `Vault` account contains more than `Withdrawal` amount.
-10. If amount is bigger, `Token proxy` program sets withdrawal status to `Pending`.
-11. If amount is lower, `Token proxy` program uses `SPL token` program address from settings and calls transfer tokens on `SPL token` program
-12. `Token proxy` sets withdrawal status to `Processed`.
+5. If all is ok, `Token Proxy` program saves relays approval to withdrawal account.
+
+##### Withdraw process
+
+1. if there are enough confirms, `Token proxy` program checks that withdrawal amount is lower than limit from settings.
+2. If amount is bigger, `Token proxy` program sets withdrawal status to `Waiting for approve`.
+3. `Token proxy` fetches vault account.
+4. If amount is lower, `Token proxy` program checks that `Vault` account contains more than `Withdrawal` amount.
+5. If amount is bigger, `Token proxy` program sets withdrawal status to `Pending`.
+6. If amount is lower, `Token proxy` program uses `SPL token` program address from settings and calls transfer tokens on `SPL token` program
+7. `Token proxy` sets withdrawal status to `Processed`.
 
 ##### Approve over limit withdrawals algorithm
 
