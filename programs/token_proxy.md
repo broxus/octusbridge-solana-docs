@@ -5,17 +5,15 @@ make transfers, mints, burns tokens.
 
 ## Deploy
 
-There is an issue with `Root token` account and `Vault` account. They can not be made as PDA via `SPL token` program. So they must be deployed first,
-then, after `Token proxy` program is deployed, the ownership of the `Root token` account or the `Vault` account must be transferred to `Token proxy` program.
-It is manual operation and one shouldn't forget about it!
+`Root token` account and `Vault` account must be made as PDA via `SPL token` program.
 
 Another important notice here is that `Token proxy` program must be deployed after `Round loader` program, because `Token proxy`
 uses it to derive relays round account address.
 
 ## Start
 
-In order to start working `Token proxy` must be initialized. Here is two options: to use vault and to use token root. It
-depends on what kind of token this proxy needs to maintain. In case of `Everscale` token, it works with `Token root` account,
+In order to start working `Token proxy` must be initialized. Here is two options: to use vault and to use token root (`Mint` in `Solana` vocabulary). 
+It depends on what kind of token this proxy needs to maintain. In case of `Everscale` token, it works with `Token root` account,
 so its address must be stored in `Settings` account. In case of `Solana` token, it uses `Vault` account.
 
 ### Settings account
