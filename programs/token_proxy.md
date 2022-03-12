@@ -253,8 +253,6 @@ bounty in `Everscale`.
 * Sender address in `Everscale`
 * Receiver address in `Solana`
 * Amount
-* `Token root` account address in `Everscale`
-* Decimals count in `Everscale`
 * Decimals count in `Solana`
 * Confirmed Relays
 * Bounty for withdrawal
