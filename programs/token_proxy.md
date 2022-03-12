@@ -24,6 +24,10 @@ It must store following:
 * Token address - In case of `Ever` it is `Token root` account address, in case of `Solana` - `Vault` account address.
 * Admin account - Account address that would allow approving big withdrawals.
 * Withdrawals limit - Max auto withdrawals amount.
+* Withdrawals period limit - Max auto withdrawals amount for current period.
+* Withdrawals period - Withdrawal period used for limitation(day, week, month, etc.).
+* Withdrawals current period amount - Amount of all withdrawals in current period.
+* Withdrawals current period ttl - End of current period.
 * Deposit limit - Max vault amount limit for `Solana` tokens deposit. In order not to lose a lot of funds in case of non-consistent work
 the max deposit limit can be set.
 * Decimals - Number of base 10 digits to the right of the decimal place.
@@ -51,7 +55,7 @@ This allows relays to be always up-to-date with what is happening on `Solana` si
 
 ### Deposit
 
-This is the transfer from `Solana` to `Everscale`. 
+Deposit is the tokens transfer from `Solana` to `Everscale`. 
 
 #### `Everscale` tokens deposit
 
@@ -84,13 +88,13 @@ This is the transfer from `Solana` to `Everscale`.
 
 ### Withdrawal
 
-This is the transfer from `Everscale` to `Solana`. 
+Withdrawal is the tokens transfer from `Everscale` to `Solana`. 
 
 #### `Everscale` tokens withdrawal
 
 It can be divided into 2 parts. At first user created `Withdraw` account, then relays confirm that it is a real withdrawal.
 
-##### User withdrawal creation
+##### User withdrawal request creation
 
 1. User calls withdraw tokens from `Token root` account in `Solana` `Token Proxy` program, transferring payload.
 2. `Token proxy` program calculates `Settings` PDA address, fetches it and gets `Token root` account address.
@@ -106,12 +110,13 @@ relays round number from payload.
 4. `Token Proxy` gets round relays info (public keys, addresses), checks that callers address is relay and ttl of the round is not expired.
 5. If all is ok, `Token Proxy` program saves relays approval to withdrawal account and checks if there are enough confirms.
 
-##### Withdrawal process
+##### Withdraw
 
-1. if there are enough confirms, `Token proxy` program checks that withdrawal amount is lower than limit from settings.
+1. if there are enough confirms, `Token proxy` program checks that withdrawal amount is lower than limits from settings.
 2. If amount is lower:
    1. `Token proxy` program uses `SPL token` program address from settings and calls mint tokens on `SPL token` program.
-   2. `Token proxy` program sets withdrawal status to `Processed`.
+   2. `Token proxy` program changes withdrawal amount in current period.
+   3. `Token proxy` program sets withdrawal status to `Processed`.
 3. If amount is bigger, `Token proxy` program sets withdrawal status to `Waiting for approve`.
 
 ##### Approve over limit withdrawals algorithm
@@ -131,7 +136,7 @@ relays round number from payload.
 It can be divided into 2 main parts. At first user created `Withdraw` account, then relays confirm that it is real withdrawal.
 But in addition it must serve 5 more situations with vault.
 
-##### User withdrawal creation
+##### User withdrawal request creation
 
 1. User calls withdraw tokens from `Vault` account in `Solana` `Token Proxy` program, transferring payload.
 2. `Token proxy` program calculates `Settings` PDA address, fetches it and gets `Vault` account address.
@@ -147,15 +152,16 @@ But in addition it must serve 5 more situations with vault.
 4. `Token Proxy` gets round relays info (public keys, addresses), checks that callers address is relay and ttl of the round is not expired.
 5. If all is ok, `Token Proxy` program saves relays approval to withdrawal account.
 
-##### Withdraw process
+##### Withdraw
 
-1. if there are enough confirms, `Token proxy` program checks that withdrawal amount is lower than limit from settings.
+1. if there are enough confirms, `Token proxy` program checks that withdrawal amount is lower than limits from settings.
 2. If amount is bigger, `Token proxy` program sets withdrawal status to `Waiting for approve`.
 3. `Token proxy` fetches vault account.
 4. If amount is lower, `Token proxy` program checks that `Vault` account contains more than `Withdrawal` amount.
 5. If amount is bigger, `Token proxy` program sets withdrawal status to `Pending`.
 6. If amount is lower, `Token proxy` program uses `SPL token` program address from settings and calls transfer tokens on `SPL token` program
-7. `Token proxy` sets withdrawal status to `Processed`.
+7. `Token proxy` program changes withdrawal amount in current period.
+8. `Token proxy` sets withdrawal status to `Processed`.
 
 ##### Approve over limit withdrawals algorithm
 
@@ -221,9 +227,26 @@ bounty in `Everscale`.
    all funds in opposite direction.
 9. `Token proxy` sets withdrawal status to `Processed`.
 
-#### Withdraw account
+#### Admin methods
 
-`Withdraw` account contains:
+##### Change withdrawal limits
+
+1. Admin calls change withdrawal limits in `Solana` `Token Proxy` program.
+2. `Token proxy` program calculates `Settings` PDA address, fetches it and gets `Admin` account.
+3. `Token proxy` checks admin account with the received once.
+4. If all is ok,`Token proxy` program changes withdrawal limits in the `Settings` account.
+
+##### Withdraw from `Vault` account
+
+1. Admin calls withdraw from `Vault` account in `Solana` `Token Proxy` program.
+2. `Token proxy` program calculates `Settings` PDA address, fetches it and gets `Vault` account address, `Admin` account,
+   `SPL token` program id.
+3. `Token proxy` checks admin account with the received once.
+4. If all is ok, `Token proxy` program uses `SPL token` program address from settings and calls transfer tokens on `SPL token` program
+
+#### Withdrawal account
+
+`Withdrawal` account contains:
 * Author
 * Payload Id
 * Relays round number
@@ -238,7 +261,6 @@ bounty in `Everscale`.
 * Minimum Number of confirmation to be processed
 * Status: new, expired, processed, cancelled, pending, waiting for approve
     * `New` is needed to save relays confirms.
-    * `Expired` - current round ttl is expired and withdrawal can not be processed.
     * `Processed` - all funds were successfully transferred to user.
     * `Cancelled` - user asked to cancel withdrawal, his funds were minted in `Everscale` to his address back.
     * `Pending` - there is not enough funds on vault to process the withdrawal.
@@ -246,17 +268,31 @@ bounty in `Everscale`.
 
 ## Methods
 
-There are nine methods in the program:
+There are few methods in the program for `Solana` tokens:
 
-* Initialize
+* Initialize 
 * Deposit
-* Withdraw
+* Withdrawal Request
 * Confirm withdrawal
-* Approve pending withdrawal
+* Withdraw
 * Force pending withdrawal
 * Cancel pending withdrawal
 * Change bounty for pending withdrawal
 * Fill pending withdrawal
+
+There are few methods in the program for `Ever` tokens:
+
+* Initialize
+* Deposit
+* Withdrawal Request
+* Confirm withdrawal
+* Withdraw
+* Force pending withdrawal
+
+There are few methods in the program for admin:
+* Approve pending withdrawal
+* Change withdrawal limits
+* Withdraw from vault
 
 ## Upgrade
 
