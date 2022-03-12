@@ -229,12 +229,12 @@ bounty in `Everscale`.
 
 #### Admin methods
 
-##### Change withdrawal limits
+##### Change settings
 
-1. Admin calls change withdrawal limits in `Solana` `Token Proxy` program.
+1. Admin calls change settings in `Solana` `Token Proxy` program.
 2. `Token proxy` program calculates `Settings` PDA address, fetches it and gets `Admin` account.
 3. `Token proxy` checks admin account with the received once.
-4. If all is ok,`Token proxy` program changes withdrawal limits in the `Settings` account.
+4. If all is ok,`Token proxy` program changes data (limits, emergency mode) in the `Settings` account.
 
 ##### Withdraw from `Vault` account
 
@@ -291,7 +291,7 @@ There are few methods in the program for `Ever` tokens:
 
 There are few methods in the program for admin:
 * Approve pending withdrawal
-* Change withdrawal limits
+* Change settings
 * Withdraw from vault
 
 ## Upgrade
