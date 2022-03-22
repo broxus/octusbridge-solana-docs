@@ -256,6 +256,7 @@ bounty in `Everscale`.
 * Decimals count in `Solana`
 * Confirmed Relays
 * Bounty for withdrawal
+* Kind of withdrawal
 * Minimum Number of confirmation to be processed
 * Status: new, expired, processed, cancelled, pending, waiting for approve
     * `New` is needed to save relays confirms.
@@ -297,3 +298,55 @@ There are few methods in the program for admin:
 Deployer of `Token proxy` program can upgrade code via BPF loader at any time, using his keys pair. It would replace
 old program with the new one, but address will remain the same. So deployer keys must be stored very caution. Maybe
 the best here is to use multi-signature account.
+
+## Relays confirmation
+
+In order to create universal mechanics for the future (for example, to add NFT transfer), relays confirm instruction must
+be designed in most common way. Relays should not know specific details of the transfer, but must have opportunity to check
+the correctness of provided data. To do so on `Solana` side the `Request` structure is proposed.
+
+### Request structure
+
+`Request` structure:
+* Payload Id
+* Relays round number
+* Minimum Number of confirmation to be processed
+* Confirmed Relays
+* Payload - bytes array
+* Meta - bytes array
+
+Payload contains the same data as in `Everscale` and `Payload Id` can contain calculated hash of this payload.
+Meta is specific `Solana` or `Everscale` information.
+
+To use this kind of structure as `Withdrawal` account, the account data must be modified. 
+
+### New Withdrawal account
+
+Common data is equal to Request structure and 2 additional structures: Withdrawal Payload and Withdrawal Meta.
+
+#### Common data
+
+* Payload Id
+* Relays round number
+* Minimum Number of confirmation to be processed
+* Confirmed Relays
+
+#### Withdrawal Payload
+
+To deserialize payload as bytes array the first field must contain bytes length. 
+
+* Payload length - Bytes count of followed data
+* Sender address in `Everscale`
+* Receiver address in `Solana`
+* Amount
+* Decimals count in `Solana`
+
+#### Withdrawal Meta
+
+To deserialize meta as bytes array the first field must contain bytes length.
+
+* Meta length - Bytes count of followed data
+* Kind of withdrawal
+* Author
+* Status
+* Bounty for withdrawal
