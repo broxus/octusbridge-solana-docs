@@ -15,13 +15,14 @@
 It must store following:
 * Custodians - List of custodians public keys
 * Name - multisig name, used for PDA creation
+* Threshold - minimum number of confirmation  
 
-### Approve withdrawal proposal
+### Transaction proposal
 
 Contains following:
 * Author - author of proposal public key, can be any custodian
-* Payload id - withdrawal payload id
-* Voters - all voted for custodians
+* Transaction instruction - instruction to be executed after the approval
+* Voters - all custodians, voted for 
 * Is executed
 
 ### Create Multisig
@@ -32,31 +33,44 @@ Contains following:
 
 ## Common work
 
-Common work is following: create proposal, vote for proposal, approve proposal. It creates new PDA, storing all related info. 
+Common work is following: create transaction, vote for transaction, approve transaction, execute transaction. 
+It creates new PDA, storing all related info. 
 
-### Create Proposal
+### Create transaction
 
 1. Custodian calls create approve withdrawal proposal method of `Admin multisig` program.
 2. `Admin multisig` program calculates `Multisig` PDA address, fetches it and gets custodians.
 3. `Admin multisig` program checks that author is in custodian list.
-4. `Admin multisig` program creates `Proposal` PDA.
+4. `Admin multisig` program creates `Transaction` PDA.
 
-#### Vote for proposal
+#### Vote for transaction
 
-1. Custodian calls vote for `Proposal` account in `Admin multisig` program.
-2. `Admin multisig` program calculates `Proposal` PDA address, fetches it.
+1. Custodian calls vote for `Transaction` account in `Admin multisig` program.
+2. `Admin multisig` program calculates `Transaction` PDA address, fetches it.
 3. `Admin multisig` program checks that custodian votes for the first time and saves vote in the list.
 
-#### Approve proposal
+#### Approve transaction
 
 1. Custodian calls approve proposal in `Admin multisig` program.
-2. `Admin multisig` program calculates `Proposal` PDA address, fetches it.
-3. `Admin multisig` program checks that votes is enough (2 / 3 + 1) and the proposal was not executed before.
-4. `Admin multisig` program calls `Token proxy` program `Approve` instruction via CPI (Cross-program invocation).
+2. `Admin multisig` program calculates `Transaction` PDA address, fetches it.
+3. `Admin multisig` program checks the proposal was not executed before and increases votes.
+
+#### Execute transaction
+
+1. Custodian calls execute proposal in `Admin multisig` program.
+2. `Admin multisig` program calculates `Transaction` PDA address, fetches it.
+3. `Admin multisig` program checks that votes count is equal or higher than threshold.
+4. `Admin multisig` program calls instruction from transaction proposal.
 5. `Admin multisig` program sets that proposal is executed.
 
 ## Upgrade
 
 Deployer of `Admin multisig` program can upgrade code via BPF loader at any time, using his keys pair. It would replace
 old program with the new one, but address will remain the same. So deployer keys must be stored very caution. Maybe
-the best here is to use multi-signature account.
+the best here is to use multi-signature account from this multisig program.
+
+## Frontend
+
+The research showed that currently there is no multisig frontend, that fits the requirements to call different instructions
+and have ledger (hardware wallet) support. Using of [wallet adapter library](https://github.com/solana-labs/wallet-adapter)
+one can create the frontend under requirements.
