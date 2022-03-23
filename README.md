@@ -66,6 +66,12 @@ Therefore, you can just use the same keys.
 We can use limits and manually approve withdrawals from `Everscale` to `Solana` when the amount is bigger than the limits.
 8. Who can approve withdrawals that are over the established limits?
 Approvals for bigger amounts can be done via multi-signature on `Everscale` or `Solana`. In the first case, the approval event must be transferred through the Bridge.
+9. Is there anything like `Ethereum` chain id in `Solana`?
+No, for the same purpose `Solana` use [recent blockhash](https://docs.solana.com/ru/implemented-proposals/durable-tx-nonces) in transactions.
+10. Can `Solana` program be updated and are there any limitations?
+Yes, it can be done via special [program](https://docs.rs/solana-program/latest/solana_program/bpf_loader_upgradeable/index.html). Program
+on deploy have limits of space being used for program data. It couldn't be increased in the future. Knowing that, one must 
+set space size a little more than current program size, when first time deploying the program.
 
 # Reminders for developers
 
