@@ -85,6 +85,7 @@ Deposit is the tokens transfer from `Solana` to `Everscale`.
 * Amount
 * `Token root` account address
 * Decimals count in `Solana`
+* Name - token ticker
 
 ### Withdrawal
 
