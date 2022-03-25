@@ -340,6 +340,7 @@ To deserialize payload as bytes array the first field must contain bytes length.
 * Receiver address in `Solana`
 * Amount
 * Decimals count in `Solana`
+* Timestamp - Withdrawal timestamp from `Everscale`
 
 #### Withdrawal Meta
 
@@ -350,3 +351,4 @@ To deserialize meta as bytes array the first field must contain bytes length.
 * Author
 * Status
 * Bounty for withdrawal
+* Name - currency ticker
