@@ -15,33 +15,77 @@ This affords to use the same key pair for both sides. One must remember that to 
 So the only manual action here is an account creation. To do so relay needs `Sols`. According to estimates relay needs to have
 10 `Sols` per year.
 
-## Monitoring
+## Processing events
 
-Relay software must monitor all transactions that occur on both `Round loader` and `Token proxy` programs.
+Relay software must monitor all transactions that occur on `Everscale` part.
+By design, `Everscale` bridge part doesn't make difference between, for example, transfer events and new round events.
+To make relays more common, it is needed to these events look the same for approval. So in `Solana` accounts must be unified.
 
-### Round loader monitoring
+### Loading new relays rounds
 
-In order to vote for new relays round relay software monitors `Round loader` program transactions. The proposal creation transaction
-contains data, that is needed to check with the data from `Everscale` event.
+One must create new round proposal in `Solana`, after such event is received from `Everscale`. This can be done 
+in manual mode or in auto-mode - by special written script. After receiving new relays round event in `Everscale`, 
+this script will create corresponding proposal.
 
-#### Round proposal
+### Tokens transfer from `Everscale` to `Solana`
 
-Each relay can create new round proposal in `Solana`, after such event is received from `Everscale`. This can be done 
-in manual mode with relays keys usage or in auto-mode - relay software can have special flag. If this flag is true, 
-after receiving new relays round event in `Everscale`, relay software will create corresponding proposal.
+User must create new transfer proposal in `Solana`, after such event is created in `Everscale`. 
 
-### Token proxy monitoring
+### Tokens transfer from `Solana` to `Everscale`
 
-In order to confirm withdrawal and deposit events relay software monitors `Token proxy` program transactions. 
+User must create new transfer proposal in `Everscale`, after such event is created in `Solana`.
 
-#### Deposit events
+## Relays confirmation
 
-On each deposit event in `Solana` new `Deposit` account is created. Relay software can receive info at any time, knowing
-payload id, because address of each account is derived from `Token proxy` program id and payload id.
+In order to create universal mechanics for the future (for example, to add NFT transfer), relays confirm instruction must
+be designed in most common way. Relays should not know specific details of the event occurred, but must have opportunity to check
+the correctness of provided data. To do so on `Solana` side the `Event` structure is proposed.
 
-#### Withdrawal events
+### Event structure
 
-On each withdrawal event in `Solana` new `Withdrawal` account is created. Relay software can receive info at any time, knowing
-payload id, because address of each account is derived from `Token proxy` program id and payload id.
+`Event` structure:
+* Payload Id
+* Relays round number
+* Minimum Number of confirmation to be processed
+* Confirmed Relays
+* Payload - bytes array
+* Meta - bytes array
 
+Payload contains the same data as in `Everscale` and `Payload Id` can contain calculated hash of this payload.
+Meta is specific `Solana` or `Everscale` information.
+
+To use this kind of structure as `Withdrawal` account, the account data must be modified.
+
+### Transfer from `Everscale` to `Solana` account
+
+Common data is equal to Request structure and 2 additional structures: Withdrawal Payload and Withdrawal Meta.
+
+#### Common data
+
+* Payload Id
+* Relays round number
+* Minimum Number of confirmation to be processed
+* Confirmed Relays
+
+#### Transfer Payload
+
+To deserialize payload as bytes array the first field must contain bytes length.
+
+* Payload length - Bytes count of followed data
+* Sender address in `Everscale`
+* Receiver address in `Solana`
+* Amount
+* Decimals count in `Solana`
+* Timestamp - Withdrawal timestamp from `Everscale`
+
+#### Transfer Meta
+
+To deserialize meta as bytes array the first field must contain bytes length.
+
+* Meta length - Bytes count of followed data
+* Kind of transfer
+* Author
+* Status
+* Bounty for transfer
+* Name - currency ticker
 
