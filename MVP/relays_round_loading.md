@@ -9,8 +9,8 @@ For each round new non-upgradeable PDA account will be created.
 
 ## Algorithm
 
-1. `Everscale` `Staking` sends new round relays to `Ever event config`.
-2. `Ever event config` deploys new `Ever event` with payload containing new round relays.
+1. `Everscale` `Staking` sends new round relays to `Everscale event configuration`.
+2. `Everscale event configuration` deploys new `Everscale event` with payload containing new round relays.
 3. Relays confirm this event.
 4. Relays transfer this event to `Solana` `Round loader` program.
 5. `Round loader` program gets old round relays info (public keys, addresses) from PDA and checks correctness of signatures received in event info.
@@ -48,10 +48,10 @@ from seed containing round number, proposal author public key and `Round loader`
 
 ## Algorithm
 
-1. `Everscale` `Staking` sends new round relays to `Ever event config`.
-2. `Ever event config` deploys new `Ever event` with payload containing new round relays.
+1. `Everscale` `Staking` sends new round relays to `Everscale event configuration`.
+2. `Everscale event configuration` deploys new `Everscale event` with payload containing new round relays.
 3. Relays confirm this event.
-4. One of relays create new round relays proposal via `Solana` `Round loader` program.
+4. Special script creates new round relays proposal via `Solana` `Round loader` program.
 5. `Round loader` program creates PDA, containing proposal data.
 6. Relays are voting for it using `Round loader` program and proposal address.
 7. If voting is completed, `Round loader` stores in PDA new round relays info.
@@ -59,19 +59,20 @@ from seed containing round number, proposal author public key and `Round loader`
 ### New round relays proposal account
 
 New round relays proposal is an account containing following:
-* New relays addresses (public keys)
+* New relay addresses (public keys)
+* Account Kind: `Proposal`
 * Round TTL
 * Round number
-* Author of proposal
 * Voters
-* Number of votes to be accepted
-* Is loaded flag (shows that relays can vote)
-* Is accepted flag (shows that proposal is accepted and new round relays is created successfully)
+* Required number of confirmations
+* Is initialized flag (shows that relays can vote)
+* Is executed flag (shows that proposal is accepted and new round relays is created successfully)
   
 ### New round relays account
 
 New round relays is an account containing following:
-* New relays addresses (public keys)
+* Relay addresses (public keys)
+* Account Kind: `RelayRound`
 * Round TTL
 * Round number
 

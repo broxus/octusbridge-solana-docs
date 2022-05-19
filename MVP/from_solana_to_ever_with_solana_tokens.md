@@ -12,11 +12,11 @@ to use vault in `Solana` blockchain to store received from users tokens and lock
 3. `SPL token` program decreases users balance.
 4. `SPL token` program increases vault balance.
 5. Relays monitor `Solana` `Token proxy` program transactions to receive notification about new transfers via `Solana` Node RPC.
-6. User deploys event of new transfer to `Ever event config` via Web3.
-7. `Ever event config` deploys new `Ever event` with payload containing transfer.
-8. Relays confirm `Ever event`.
-9. `Ever event` sends correctness callback to `Ever event config`.
-10. `Ever event config` mints `Solana` tokens via `Token proxy` and sends them to users address in `Everscale` blockchain.
+6. User deploys event of new transfer to `Everscale event configuration` via Web3.
+7. `Everscale event configuration` deploys new `Everscale event` with payload containing transfer.
+8. Relays confirm `Everscale event`.
+9. `Everscale event` sends correctness callback to `Everscale event configuration`.
+10. `Everscale event configuration` mints `Solana` tokens via `Token proxy` and sends them to users address in `Everscale` blockchain.
 
 ## Reminders
 

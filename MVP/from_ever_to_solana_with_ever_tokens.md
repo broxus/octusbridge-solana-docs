@@ -8,9 +8,9 @@ to use token root owned by the `Token proxy` program on the `Solana` blockchain 
 ## Algorithm
 
 1. `Everscale` `Token proxy` locks user tokens after Web3 request.
-2. `Token proxy` sends new event to `Ever event config`.
-3. `Ever event config` deploys new `Ever event` with payload containing transfer.
-4. Relays confirm `Ever event`.
+2. `Token proxy` sends new event to `Everscale event configuration`.
+3. `Everscale event configuration` deploys new `Everscale event` with payload containing transfer.
+4. Relays confirm `Everscale event`.
 5. User calls mint tokens in `Solana` `Token Proxy` program transferring payload with relays signs.
 6. `Token Proxy` program calls `Round loader` program to check relays signs.
 7. `Round loader` program gets current round relays info (public keys, addresses) and checks signs.
@@ -51,9 +51,9 @@ The same as with the proposal #2 for transferring `Solana` tokens from `Everscal
 Mint algorithm
 
 1. `Everscale` `Token proxy` burns user tokens after Web3 request.
-2. `Token proxy` sends new event to `Ever event config`.
-3. `Ever event config` deploys new `Ever event` with payload containing transfer.
-4. Relays get info from the `Ever event`, containing the entire withdrawal payload.
+2. `Token proxy` sends new event to `Everscale event configuration`.
+3. `Everscale event configuration` deploys new `Everscale event` with payload containing transfer.
+4. Relays get info from the `Everscale event`, containing the entire withdrawal payload.
 5. User calls withdraw tokens from token root in the `Solana` `Token Proxy` program, transferring payload.
 6. `Token proxy` creates unique withdraw account with payload from event.
 7. Relays get callback from the `Token proxy` program about new withdrawal.

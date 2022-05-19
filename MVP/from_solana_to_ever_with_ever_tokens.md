@@ -12,11 +12,11 @@ to use token root owned by `Token proxy` program in `Solana` blockchain to burn 
 3. It uses `SPL token` program to burn tokens received from user.
 4. `SPL token` program decreases users balance and burns tokens.
 5. Relays monitor `Solana` `Token proxy` program transactions to receive notification about new transfers via `Solana` Node RPC.
-6. User deploys event of new transfer to `Ever event config` via Web3.
-7. `Ever event config` deploys new `Ever event` with payload containing transfer.
-8. Relays confirm `Ever event`.
-9. `Ever event` sends correctness callback to `Ever event config`.
-10. `Ever event config` unlocks `Everscale` tokens via `Token proxy` and sends them to users address in `Everscale` blockchain.
+6. User deploys event of new transfer to `Everscale event configuration` via Web3.
+7. `Everscale event configuration` deploys new `Everscale event` with payload containing transfer.
+8. Relays confirm `Everscale event`.
+9. `Everscale event` sends correctness callback to `Everscale event configuration`.
+10. `Everscale event configuration` unlocks `Everscale` tokens via `Token proxy` and sends them to users address in `Everscale` blockchain.
 
 ## Questions
 

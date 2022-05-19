@@ -72,27 +72,28 @@ There are only five methods in the program:
 ### New round relays proposal account
 
 New round relays proposal is an account containing following:
-* New relays addresses (public keys)
+* New relay addresses (public keys)
+* Account Kind: `Proposal`
 * Round TTL
 * Round number
-* Author of proposal
 * Voters
-* Number of votes to be accepted
+* Required number of confirmations
 * Is initialized flag (shows that relays can vote)
-* Is accepted flag (shows that proposal is accepted and new round relays is created successfully)
+* Is executed flag (shows that proposal is accepted and new round relays is created successfully)
 
 ### New round relays account
 
 New round relays is an account containing following:
-* New relays addresses (public keys)
+* Relay addresses (public keys)
+* Account Kind: `RelayRound`
 * Round TTL
 * Round number
-* Is initialized flag
 
 ### Settings account
 
 Settings account contains:
 * Last round number
+* Account Kind: `Settings`
 * Is initialized flag
 
 ## Upgrade

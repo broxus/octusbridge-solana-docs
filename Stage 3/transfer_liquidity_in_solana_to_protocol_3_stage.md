@@ -8,8 +8,8 @@ transferring liquidity from `Solana` vault to chosen protocol.
 
 ## Algorithm
 
-1. `Everscale` `DAO` sends confirmed proposal to `Ever event config`.
-2. `Ever event config` deploys new `Ever event` with payload containing proposal executive.
+1. `Everscale` `DAO` sends confirmed proposal to `Everscale event configuration`.
+2. `Everscale event configuration` deploys new `Everscale event` with payload containing proposal executive.
 3. Relays confirm this event.
 4. Relays transfer this event to `Solana` `Token Proxy` program.
 5. `Token Proxy` program calls check signs in `Round loader` program.

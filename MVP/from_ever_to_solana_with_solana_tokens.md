@@ -8,9 +8,9 @@ to use the vault owned by the `Token proxy` program in the `Solana` blockchain t
 ## Algorithm
 
 1. The `Everscale` `Token proxy` burns user tokens after Web3 request.
-2. The `Token proxy` sends new event to the `Ever event config`.
-3. The `Ever event config` deploys new `Ever event` with payload containing transfer.
-4. Relays confirm the `Ever event`.
+2. The `Everscale` `Token proxy` deploys new event to the `Everscale event configuration`.
+3. The `Everscale event configuration` deploys new `Everscale event` with payload containing transfer.
+4. Relays confirm the `Everscale event`.
 5. User calls withdraw tokens from vault in the `Solana` `Token Proxy` program transferring the payload with relays signs.
 6. The `Token Proxy` program calls the `Round loader` program to check relays signs.
 7. The `Round loader` program gets current round relays info (public keys, addresses) and checks signs.
@@ -57,9 +57,9 @@ all relays approvals on the user side, because they can confirm withdrawals them
 Standard withdrawal algorithm
 
 1. The `Everscale` `Token proxy` burns user tokens after Web3 request.
-2. The `Token proxy` sends new event to `Ever event config`.
-3. The `Ever event config` deploys the new `Ever event` with a payload containing transfer.
-4. Relays get info from the `Ever event`, containing the entire withdrawal payload.
+2. The `Everscale` `Token proxy` deploys new event via `Everscale event configuration`.
+3. The `Everscale event configuration` deploys the new `Everscale event` with a payload containing transfer.
+4. Relays get info from the `Everscale event`, containing the entire withdrawal payload.
 5. User calls withdraw tokens from the vault in the `Solana` `Token Proxy` program, transferring the payload.
 6. The `Token proxy` creates a unique withdrawal account with the payload from the event.
 7. Relays get callback from `Token proxy` program about a new withdrawal.
@@ -75,24 +75,26 @@ Standard withdrawal algorithm
 ### Withdrawal account
 
 Withdrawal accounts contain the following:
-* Payload Id
+* Account Kind: `Proposal`
 * Relays round number
+* Required number of confirmations
+* Confirmed Relays
 * Sender address in `Everscale`
 * Receiver address in `Solana`
 * Amount
-* `Token root` account address in `Everscale`
-* Decimals count in `Everscale`
-* Decimals count in `Solana`
-* Confirmed Relays
 * Bounty for withdrawal
-* Minimum Number of confirmation to be processed
+* Kind of withdrawal
+* Author
+* `Settings` address of withdrawal
+* Event timestamp from `Everscale`,
+* Event transaction_lt from `Everscale`,
+* Event configuration from `Everscale`,
 * Status: new, expired, processed, cancelled, pending, waiting for approve
-  * `New` relays confirmations needed to be saved.
-  * `Expired` - current round ttl has expired and the withdrawal can not be processed.
-  * `Processed` - all funds were successfully transferred to user.
-  * `Cancelled` - the user asked to cancel the withdrawal, his funds were minted back to his `Everscale` address.
-  * `Pending` - there are not enough funds in the vault to process the withdrawal.
-  * `Waiting for approve` - the withdrawal amount is bigger than the limit.
+    * `New` is needed to save relays confirms.
+    * `Processed` - all funds were successfully transferred to user.
+    * `Cancelled` - user asked to cancel withdrawal, his funds were minted in `Everscale` to his address back.
+    * `Pending` - there is not enough funds on vault to process the withdrawal.
+    * `Waiting for approve` - withdrawal amount is bigger than the limit
 
 ## Scheme
 

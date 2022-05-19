@@ -21,6 +21,7 @@ so its address must be stored in `Settings` account. In case of `Solana` token, 
 It must store following:
 * Token name
 * Token Type: `Ever` or `Solana`
+* Account Kind: `Settings`, `RelayRound` or `Proposal`
 * Token address - In case of `Ever` it is `Token root` account address, in case of `Solana` - `Vault` account address.
 * Admin account - Account address that would allow approving big withdrawals.
 * Withdrawals limit - Max auto withdrawals amount.
@@ -30,7 +31,6 @@ It must store following:
 * Withdrawals current period ttl - End of current period.
 * Deposit limit - Max vault amount limit for `Solana` tokens deposit. In order not to lose a lot of funds in case of non-consistent work
 the max deposit limit can be set.
-* Decimals - Number of base 10 digits to the right of the decimal place.
 * Emergency mode - The mode that denies all deposits and withdrawals.
 
 ### Vault account
@@ -79,13 +79,13 @@ Deposit is the tokens transfer from `Solana` to `Everscale`.
 #### Deposit account
 
 `Deposit` account contains:
-* Payload Id
+* Account Kind: `Deposit`
 * Sender address in `Solana`
 * Receiver address in `Everscale`
 * Amount
-* `Token root` account address
-* Decimals count in `Solana`
-* Name - token ticker
+* Account seed - unique value
+
+`Deposit` address is derived from `Seed` and `Settings` address.
 
 ### Withdrawal
 
@@ -93,7 +93,7 @@ Withdrawal is the tokens transfer from `Everscale` to `Solana`.
 
 #### `Everscale` tokens withdrawal
 
-It can be divided into 2 parts. At first user created `Withdraw` account, then relays confirm that it is a real withdrawal.
+It can be divided into 2 parts. At first user created `Withdrawal` account, then relays confirm that it is a real withdrawal.
 
 ##### User withdrawal request creation
 
@@ -237,6 +237,13 @@ bounty in `Everscale`.
 3. `Token proxy` checks admin account with the received once.
 4. If all is ok,`Token proxy` program changes data (limits, emergency mode) in the `Settings` account.
 
+##### Change admin
+
+1. `Token proxy` program owner calls change admin in `Solana` `Token Proxy` program.
+2. `Token proxy` program calculates `Settings` PDA address.
+3. `Token proxy` checks program owner with the received once.
+4. If all is ok,`Token proxy` program admin account in the `Settings` account.
+
 ##### Withdraw from `Vault` account
 
 1. Admin calls withdraw from `Vault` account in `Solana` `Token Proxy` program.
@@ -248,17 +255,20 @@ bounty in `Everscale`.
 #### Withdrawal account
 
 `Withdrawal` account contains:
-* Author
-* Payload Id
+* Account Kind: `Proposal`
 * Relays round number
+* Required number of confirmations
+* Confirmed Relays
 * Sender address in `Everscale`
 * Receiver address in `Solana`
 * Amount
-* Decimals count in `Solana`
-* Confirmed Relays
 * Bounty for withdrawal
 * Kind of withdrawal
-* Minimum Number of confirmation to be processed
+* Author
+* `Settings` address of withdrawal
+* Event timestamp from `Everscale`,
+* Event transaction_lt from `Everscale`,
+* Event configuration from `Everscale`,
 * Status: new, expired, processed, cancelled, pending, waiting for approve
     * `New` is needed to save relays confirms.
     * `Processed` - all funds were successfully transferred to user.
@@ -293,6 +303,7 @@ There are few methods in the program for admin:
 * Approve pending withdrawal
 * Change settings
 * Withdraw from vault
+* Change admin
 
 ## Upgrade
 
