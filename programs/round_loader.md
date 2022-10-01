@@ -59,42 +59,61 @@ Common algorithm is equal to steps 5-29 of deploy. Any relay from current round 
 
 ## Methods
 
-There are only five methods in the program:
+There are only few methods in the program:
 
+* Vote for proposal
 * Initialize
+* Update Settings
+* Create relay round
 * Create proposal
 * Write relays to proposal
-* Finish proposal loading
-* Vote for proposal
+* Finalize proposal
+* Execute proposal
+* Execute proposal by admin
 
 ## Accounts
 
 ### New round relays proposal account
 
 New round relays proposal is an account containing following:
-* New relay addresses (public keys)
-* Account Kind: `Proposal`
-* Round TTL
-* Round number
-* Voters
-* Required number of confirmations
-* Is initialized flag (shows that relays can vote)
-* Is executed flag (shows that proposal is accepted and new round relays is created successfully)
+* Is initialized flag
+* Account kind - `Proposal`
+* Is executed flag
+* Author - proposal creator
+* Relays round number - only relays from this round can approve this event 
+* Required votes to be processed
+* Proposal Data for approve (PDA) :
+    * Settings address - corresponding settings program address
+    * Event timestamp - timestamp from `Everscale` blockchain transaction
+    * Event transaction logical time - transaction logical time from `Everscale` blockchain transaction
+    * Event configuration address - `Everscale` event configuration address, that created event
+* Event:
+    * New relays addresses (public keys)
+    * Round end - timestamp
+    * Round number - new round number
+* Meta - empty
+* Signers - array of signs (confirm or reject)
 
 ### New round relays account
 
 New round relays is an account containing following:
-* Relay addresses (public keys)
+* Is initialized flag
 * Account Kind: `RelayRound`
-* Round TTL
 * Round number
+* Round end
+* Relay addresses (public keys)
 
 ### Settings account
 
 Settings account contains:
-* Last round number
-* Account Kind: `Settings`
 * Is initialized flag
+* Account Kind: `Settings`
+* Current round number
+* Round submitter - Public key of admin, that can create new round manually or approve proposal
+* Min required votes - The standard formula for required votes is `2 / 3 * relays round len + 1`, If it is lower than 
+this parameter, it is used as required votes for event instead
+* Round TTL - In order to have smooth round changes, this parameter is always added to relays round end timestamp. It allows
+users, that created events in `Everscale` on border of round changes, to be able to complete transfer.
 
 ## Upgrade
 

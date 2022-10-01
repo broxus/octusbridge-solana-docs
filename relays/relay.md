@@ -1,19 +1,19 @@
 # Design
 
-Relay software is to be upgraded to support `Solana`. The main idea is to make fewer changes. 
+Relay software must be upgraded to support `Solana`. The main idea is to make fewer changes. 
 
 ## RPC
 
 Relay will connect to `Solana` node via RPC. The best option is to use official `Solana` client, because it is written in 
-Rust and relay software is also written in Rust. The only thing to check is how stable is node RPC. Maybe it is better 
-to run node in own environment. 
+Rust and relay software is also written in Rust. The only thing to check is how stable is RPC node. Maybe it is better 
+to use own or private node. 
 
 ## Start
 
 `Solana` and `Eversacle` use key pairs in the same format - [ed25519](https://solana-labs.github.io/solana-web3.js/classes/Keypair.html).
-This affords to use the same key pair for both sides. One must remember that to work with `Solana` relay needs an account.
-So the only manual action here is an account creation. To do so relay needs `Sols`. According to estimates relay needs to have
-10 `Sols` per year.
+This affords to use the same key pair for both sides. One must remember that, to work with `Solana`, relay needs an account.
+So the only manual action here is an account creation. To do so relay needs `Sols`. According to estimate calculations relay needs 
+1 `Sol` to start working. It will receive sols from proposal account on vote to cover blockchain fees.
 
 ## Processing events
 
@@ -33,7 +33,7 @@ User must create new transfer proposal in `Solana`, after such event is created 
 
 ### Tokens transfer from `Solana` to `Everscale`
 
-User must create new transfer proposal in `Everscale`, after such event is created in `Solana`.
+User must create new transfer event in `Everscale`, after such proposal is created in `Solana`.
 
 ## Relays confirmation
 
@@ -44,48 +44,57 @@ the correctness of provided data. To do so on `Solana` side the `Event` structur
 ### Event structure
 
 `Event` structure:
-* Payload Id
+* Is initialized flag
+* Account kind - Settings, Deposit, Proposal, RelayRound
+* Is executed flag
+* Author - proposal creator
 * Relays round number
-* Minimum Number of confirmation to be processed
-* Confirmed Relays
-* Payload - bytes array
+* Required votes to be processed
+* Proposal Data for approve (PDA) :
+  * Settings address - corresponding settings program address
+  * Event timestamp - timestamp from `Everscale` blockchain transaction
+  * Event transaction logical time - transaction logical time from `Everscale` blockchain transaction
+  * Event configuration address - `Everscale` event configuration address, that created event
+* Event - bytes array
 * Meta - bytes array
+* Signers - array of signs (confirm or reject)
 
-Payload contains the same data as in `Everscale` and `Payload Id` can contain calculated hash of this payload.
+Event contains the same data as in `Everscale` and relay can calculate hash of this payload to compare events. Also PDA
+and relays round number are used to check event and proposal equality.
+
 Meta is specific `Solana` or `Everscale` information.
 
 To use this kind of structure as `Withdrawal` account, the account data must be modified.
 
 ### Transfer from `Everscale` to `Solana` account
 
-Common data is equal to Request structure and 2 additional structures: Withdrawal Payload and Withdrawal Meta.
+Common data is equal to Request structure and 2 additional structures: Withdrawal Event and Withdrawal Meta.
 
 #### Common data
 
-* Payload Id
+* Is initialized flag
+* Account kind - Settings, Deposit, Proposal, RelayRound
+* Is executed flag
+* Author - proposal creator
 * Relays round number
-* Minimum Number of confirmation to be processed
-* Confirmed Relays
+* Required votes to be processed
+* Proposal Data for approve (PDA)
 
-#### Transfer Payload
+#### Withdrawal Event
 
 To deserialize payload as bytes array the first field must contain bytes length.
 
-* Payload length - Bytes count of followed data
+* Event length - Bytes count of followed data
 * Sender address in `Everscale`
 * Receiver address in `Solana`
 * Amount
-* Decimals count in `Solana`
-* Timestamp - Withdrawal timestamp from `Everscale`
 
-#### Transfer Meta
+#### Withdrawal Meta
 
 To deserialize meta as bytes array the first field must contain bytes length.
 
 * Meta length - Bytes count of followed data
-* Kind of transfer
-* Author
 * Status
 * Bounty for transfer
-* Name - currency ticker
+* Epoch
 
