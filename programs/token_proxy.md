@@ -12,26 +12,45 @@ uses it to derive relays round account address.
 
 ## Start
 
-In order to start working `Token proxy` must be initialized. Here is two options: to use vault and to use token root (`Mint` in `Solana` vocabulary). 
-It depends on what kind of token this proxy needs to maintain. In case of `Everscale` token, it works with `Token root` account,
-so its address must be stored in `Settings` account. In case of `Solana` token, it uses `Vault` account.
+In order to start working `Token proxy` must be initialized. On initialization - `Settings` account is created. 
 
-### Settings account
+###  Settings account
 
 It must store following:
-* Token name
-* Token Type: `Ever` or `Solana`
-* Account Kind: `Settings`, `RelayRound` or `Proposal`
-* Token address - In case of `Ever` it is `Token root` account address, in case of `Solana` - `Vault` account address.
-* Admin account - Account address that would allow approving big withdrawals.
-* Withdrawals limit - Max auto withdrawals amount.
-* Withdrawals period limit - Max auto withdrawals amount for current period.
-* Withdrawals period - Withdrawal period used for limitation(day, week, month, etc.).
-* Withdrawals current period amount - Amount of all withdrawals in current period.
-* Withdrawals current period ttl - End of current period.
-* Deposit limit - Max vault amount limit for `Solana` tokens deposit. In order not to lose a lot of funds in case of non-consistent work
-the max deposit limit can be set.
+* Is initialized flag
+* Account Kind: `Settings`
 * Emergency mode - The mode that denies all deposits and withdrawals.
+* Guardian - Public key of guardian, that can switch off / on emergency mode
+* Withdrawal manager - Public key, that can allow approving big withdrawals.
+
+## Tokens
+
+In order to start working with tokens - `Token Settings` account must be created.
+Here is two options: to use vault and to use token root (`Mint` in `Solana` vocabulary).
+It depends on what kind of token this proxy needs to maintain. In case of `Everscale` token, it works with `Token root` account,
+so its address must be stored in `Token Settings` account. In case of `Solana` token, it uses `Vault` account.
+
+### Token Settings account
+
+It must store following:
+* Is initialized flag
+* Account Kind: `Settings`
+* Token name
+* Ever decimals
+* Solana decimals
+* Token Kind: `Ever` or `Solana`:
+  - `Ever`: 
+    * Mint address
+  - `Solana`:
+    * Mint address
+    * Vault address
+* Deposit limit - Max vault amount limit for `Solana` tokens deposit. In order not to lose a lot of funds in case of non-consistent work
+  the max deposit limit can be set.
+* Withdrawals limit - Max auto withdrawals amount.
+* Withdrawals daily limit - Max auto withdrawals amount for day (24h).
+* Withdrawals daily amount - Amount of all withdrawals in that day (epoch).
+* Withdrawal epoch - Number of day from UNIX Time 0.
+* Emergency mode - The mode that denies all deposits and withdrawals for this token. 
 
 ### Vault account
 
@@ -47,6 +66,12 @@ the max deposit limit can be set.
 1. Deployer of `Token proxy` program calls init method, providing settings data.
 2. `Token proxy` program calculates `Settings` PDA address, checks that it is not created.
 3. `Token proxy` program creates `Settings` PDA, storing data provided.
+
+### Token Initialization
+
+1. Deployer of `Token proxy` program calls `InitializeMint` or `InitializeVault` method, providing token settings data.
+2. `Token proxy` program calculates `Token Settings` PDA address, checks that it is not created.
+3. `Token proxy` program creates `Token Settings` PDA, storing data provided.
 
 ## Common work
 
@@ -79,13 +104,18 @@ Deposit is the tokens transfer from `Solana` to `Everscale`.
 #### Deposit account
 
 `Deposit` account contains:
+* Is initialized flag
 * Account Kind: `Deposit`
-* Sender address in `Solana`
-* Receiver address in `Everscale`
-* Amount
-* Account seed - unique value
+* Event:
+  * Event length in bytes
+  * Sender address in `Solana`
+  * Receiver address in `Everscale`
+  * Amount
+* Meta:
+  * Meta length in bytes 
+  * Account seed - unique value
 
-`Deposit` address is derived from `Seed` and `Settings` address.
+`Deposit` address is derived from `Seed` and `Token Settings` address.
 
 ### Withdrawal
 
@@ -93,20 +123,20 @@ Withdrawal is the tokens transfer from `Everscale` to `Solana`.
 
 #### `Everscale` tokens withdrawal
 
-It can be divided into 2 parts. At first user created `Withdrawal` account, then relays confirm that it is a real withdrawal.
+It can be divided into 2 parts. At first user created `Withdrawal` account, then relays confirm, that it is a real withdrawal.
 
 ##### User withdrawal request creation
 
-1. User calls withdraw tokens from `Token root` account in `Solana` `Token Proxy` program, transferring payload.
+1. User calls withdraw tokens from `Token` account in `Solana` `Token Proxy` program, transferring payload.
 2. `Token proxy` program calculates `Settings` PDA address, fetches it and gets `Token root` account address.
 3. `Token proxy` creates `Withdraw` account.
 
 ##### Relays confirmation
 
 1. Relays send confirm withdrawal to `Token proxy`, containing the same payload from `Everscale`.
-2. `Token proxy` program calculates `Settings` PDA address, fetches it and gets `Token root` account address, `Relay loader` program id,
+2. `Token proxy` program calculates `Token Settings` PDA address, fetches it and gets `Token root` account address, `Relay loader` program id,
 `SPL token` program id.
-3. `Token proxy` program calculates `Relays round` account, using seed, derived from `Relay loader` program id and 
+3. `Token proxy` program calculates `Relays round` account, using seed, derived from `Round loader` program id and 
 relays round number from payload.
 4. `Token Proxy` gets round relays info (public keys, addresses), checks that callers address is relay and ttl of the round is not expired.
 5. If all is ok, `Token Proxy` program saves relays approval to withdrawal account and checks if there are enough confirms.
@@ -123,10 +153,10 @@ relays round number from payload.
 ##### Approve over limit withdrawals algorithm
 
 1. Admin calls approve pending withdrawal in `Solana` `Token Proxy` program.
-2. `Token proxy` program calculates `Settings` PDA address, fetches it and gets `Token root` account address, `Admin` account,
-`SPL token` program id.
+2. `Token proxy` program calculates `Settings` PDA address and `Token Settings` PDA address, fetches it and gets `Token root` 
+account address, `Withdrawal manager` account, `SPL token` program id.
 3. `Token proxy` program checks that emergency mode is off.
-4. `Token proxy` checks admin account with the received once.
+4. `Token proxy` checks `Withdrawal manager` account with the received once.
 5. `Token proxy` fetches withdrawal account.
 6. `Token proxy` checks relays confirmations and status.
 7. If all is ok, `Token proxy` program uses `SPL token` program address from settings and calls mint tokens on `SPL token` program
@@ -134,7 +164,7 @@ relays round number from payload.
 
 #### `Solana` tokens withdrawal
 
-It can be divided into 2 main parts. At first user created `Withdraw` account, then relays confirm that it is real withdrawal.
+It can be divided into 2 main parts. At first user created `Withdrawal` account, then relays confirm that it is real withdrawal.
 But in addition it must serve 5 more situations with vault.
 
 ##### User withdrawal request creation
@@ -146,14 +176,14 @@ But in addition it must serve 5 more situations with vault.
 ##### Relays confirmation
 
 1. Relays send confirm withdrawal to `Token proxy`, containing the same payload from `Everscale`.
-2. `Token proxy` program calculates `Settings` PDA address, fetches it and gets `Vault` account address, `Relay loader` program id,
+2. `Token proxy` program calculates `Token Settings` PDA address, fetches it and gets `Vault` account address, `Round loader` program id,
    `SPL token` program id.
-3. `Token proxy` program calculates `Relays round` account, using seed, derived from `Relay loader` program id and
+3. `Token proxy` program calculates `Relays round` account, using seed, derived from `Round loader` program id and
    relays round number from payload.
-4. `Token Proxy` gets round relays info (public keys, addresses), checks that callers address is relay and ttl of the round is not expired.
+4. `Token Proxy` gets round relays info (public keys, addresses), checks that callers address is relay and the round is not expired.
 5. If all is ok, `Token Proxy` program saves relays approval to withdrawal account.
 
-##### Withdraw
+##### WithdrawSol or WithdrawEver
 
 1. if there are enough confirms, `Token proxy` program checks that withdrawal amount is lower than limits from settings.
 2. If amount is bigger, `Token proxy` program sets withdrawal status to `Waiting for approve`.
@@ -167,7 +197,7 @@ But in addition it must serve 5 more situations with vault.
 ##### Approve over limit withdrawals algorithm
 
 1. Admin calls approve pending withdrawal in `Solana` `Token Proxy` program.
-2. `Token proxy` program calculates `Settings` PDA address, fetches it and gets `Vault` account address, `Admin` account,
+2. `Token proxy` program calculates `Settings` PDA address and `Token Settings` PDA address, fetches it and gets `Vault` account address, `Withdrawal manager` account,
    `SPL token` program id.
 3. `Token proxy` program checks that emergency mode is off.
 4. `Token proxy` checks admin account with the received once.
@@ -182,7 +212,7 @@ But in addition it must serve 5 more situations with vault.
 ##### Force pending withdrawal algorithm
 
 1. User calls force pending withdrawal in `Solana` `Token Proxy` program.
-2. `Token proxy` program calculates `Settings` PDA address, fetches it and gets `Vault` account address,
+2. `Token proxy` program calculates `Settings` PDA address and `Token Settings` PDA address, fetches it and gets `Vault` account address,
    `SPL token` program id.
 3. `Token proxy` fetches withdrawal account.
 4. `Token proxy` checks relays confirmations, pending status.
@@ -195,7 +225,7 @@ But in addition it must serve 5 more situations with vault.
 ##### Cancel pending withdrawal algorithm
 
 1. User calls cancel pending withdrawal in `Solana` `Token Proxy` program.
-2. `Token proxy` program calculates `Settings` PDA address, fetches it.
+2. `Token proxy` program calculates `Settings` PDA address and `Token Settings` PDA address, fetches it.
 3. `Token proxy` fetches withdrawal account.
 4. `Token proxy` checks relays confirmations, pending status.
 5. `Token proxy` creates `Deposit` [PDA](#deposit-account), containing mirrored data from withdrawal account, as like the user transferred
@@ -208,7 +238,7 @@ User can set bounty for proceeding his pending withdrawal, in order to other use
 bounty in `Everscale`.
 
 1. User calls add or change bounty for pending withdrawal in `Solana` `Token Proxy` program, transferring new bounty size.
-2. `Token proxy` program calculates `Settings` PDA address, fetches it.
+2. `Token proxy` program calculates `Settings` PDA address and `Token Settings` PDA address, fetches it.
 3. `Token proxy` fetches withdrawal account.
 4. `Token proxy` checks relays confirmations, pending status.
 5. `Token proxy` checks that new bounty size is lower than amount in withdrawal.
@@ -217,7 +247,7 @@ bounty in `Everscale`.
 ##### Filling pending withdrawal algorithm
 
 1. User calls fill pending withdrawal in `Solana` `Token Proxy` program, transferring payload.
-2. `Token proxy` program calculates `Settings` PDA address, fetches it and gets `Vault` account address,
+2. `Token proxy` program calculates `Settings` PDA address and `Token Settings` PDA address, fetches it and gets `Vault` account address,
    `SPL token` program id.
 3. `Token proxy` program fetches `Vault` account.
 4. `Token proxy` fetches withdrawal account.
@@ -230,80 +260,110 @@ bounty in `Everscale`.
 
 #### Admin methods
 
-##### Change settings
+##### Change Guardian
 
-1. Admin calls change settings in `Solana` `Token Proxy` program.
-2. `Token proxy` program calculates `Settings` PDA address, fetches it and gets `Admin` account.
-3. `Token proxy` checks admin account with the received once.
-4. If all is ok,`Token proxy` program changes data (limits, emergency mode) in the `Settings` account.
+1. Admin calls change guardian in `Solana` `Token Proxy` program.
+2. `Token proxy` program calculates `Settings` PDA address, fetches it and gets `Guardian` account.
+3. `Token proxy` checks that `Token Proxy` program data owner is the signer of the transaction.
+4. If all is ok,`Token proxy` program changes `Guardian` account in `Settings` account.
 
-##### Change admin
+##### Change Withdrawal manager
 
-1. `Token proxy` program owner calls change admin in `Solana` `Token Proxy` program.
+1. `Token proxy` program owner calls change `Withdrawal manager` in `Solana` `Token Proxy` program.
 2. `Token proxy` program calculates `Settings` PDA address.
-3. `Token proxy` checks program owner with the received once.
-4. If all is ok,`Token proxy` program admin account in the `Settings` account.
+3. `Token proxy` checks that `Token Proxy` program data owner is the signer of the transaction.
+4. If all is ok,`Token proxy` program changes `Withdrawal manager` account in the `Settings` account.
 
-##### Withdraw from `Vault` account
+##### Change Deposit limit
 
-1. Admin calls withdraw from `Vault` account in `Solana` `Token Proxy` program.
-2. `Token proxy` program calculates `Settings` PDA address, fetches it and gets `Vault` account address, `Admin` account,
-   `SPL token` program id.
-3. `Token proxy` checks admin account with the received once.
-4. If all is ok, `Token proxy` program uses `SPL token` program address from settings and calls transfer tokens on `SPL token` program
+1. Admin calls change Deposit limit in `Solana` `Token Proxy` program.
+2. `Token proxy` program calculates `Token Settings` PDA address, fetches it.
+3. `Token proxy` checks that `Token Proxy` program data owner is the signer of the transaction.
+4. If all is ok,`Token proxy` program changes deposit limit account in `Token Settings` account.
+
+##### Change Withdrawal limit
+
+1. Admin calls change Withdrawal limit in `Solana` `Token Proxy` program.
+2. `Token proxy` program calculates `Token Settings` PDA address, fetches it.
+3. `Token proxy` checks that `Token Proxy` program data owner is the signer of the transaction.
+4. If all is ok,`Token proxy` program changes withdrawal limit account in `Token Settings` account.
+
+##### Enable Emergency
+
+1. Admin calls enable emergency in `Solana` `Token Proxy` program.
+2. `Token proxy` program calculates `Settings` PDA address, fetches it and gets `Guardian` account.
+3. `Token proxy` checks that `Token Proxy` program data owner or `Guardian` account is the signer of the transaction.
+4. If all is ok,`Token proxy` program enables `Emergency` account in `Settings` account.
+
+##### Disable Emergency
+
+1. Admin calls disable emergency in `Solana` `Token Proxy` program.
+2. `Token proxy` program calculates `Settings` PDA address, fetches it and gets `Guardian` account.
+3. `Token proxy` checks that `Token Proxy` program data owner or `Guardian` account is the signer of the transaction.
+4. If all is ok,`Token proxy` program disables `Emergency` account in `Settings` account.
+
+##### Enable Token Emergency
+
+1. Admin calls enable token emergency in `Solana` `Token Proxy` program.
+2. `Token proxy` program calculates `Settings` PDA address and `Token Settings` PDA address, fetches it and gets `Guardian` account.
+3. `Token proxy` checks that `Token Proxy` program data owner or `Guardian` account is the signer of the transaction.
+4. If all is ok,`Token proxy` program enables `Emergency` account in `Token Settings` account.
+
+##### Disable Token Emergency
+
+1. Admin calls disable token emergency in `Solana` `Token Proxy` program.
+2. `Token proxy` program calculates `Settings` PDA address and `Token Settings` PDA address, fetches it and gets `Guardian` account.
+3. `Token proxy` checks that `Token Proxy` program data owner or `Guardian` account is the signer of the transaction.
+4. If all is ok,`Token proxy` program disables `Emergency` account in `Token Settings` account.
 
 #### Withdrawal account
 
 `Withdrawal` account contains:
+* Is initialized flag
 * Account Kind: `Proposal`
-* Relays round number
-* Required number of confirmations
-* Confirmed Relays
-* Sender address in `Everscale`
-* Receiver address in `Solana`
-* Amount
-* Bounty for withdrawal
-* Kind of withdrawal
-* Author
-* `Settings` address of withdrawal
-* Event timestamp from `Everscale`,
-* Event transaction_lt from `Everscale`,
-* Event configuration from `Everscale`,
-* Status: new, expired, processed, cancelled, pending, waiting for approve
-    * `New` is needed to save relays confirms.
-    * `Processed` - all funds were successfully transferred to user.
-    * `Cancelled` - user asked to cancel withdrawal, his funds were minted in `Everscale` to his address back.
-    * `Pending` - there is not enough funds on vault to process the withdrawal.
-    * `Waiting for approve` - withdrawal amount is bigger than the limit
+* Is executed flag
+* Author - proposal creator
+* Relays round number - only relays from this round can approve this event
+* Required votes to be processed
+* Proposal Data for approve (PDA) :
+    * Settings address - corresponding settings program address
+    * Event timestamp - timestamp from `Everscale` blockchain transaction
+    * Event transaction logical time - transaction logical time from `Everscale` blockchain transaction
+    * Event configuration address - `Everscale` event configuration address, that created event
+  
+* Event:
+    * Event length - Bytes count of followed data
+    * Sender address in `Everscale`
+    * Receiver address in `Solana`
+    * Amount
+* Meta:
+    * Meta length - Bytes count of followed data
+    * Bounty for withdrawal
+    * Status: new, expired, processed, cancelled, pending, waiting for approve
+      * `New` is needed to save relays confirms.
+      * `Processed` - all funds were successfully transferred to user.
+      * `Cancelled` - user asked to cancel withdrawal, his funds were minted in `Everscale` to his address back.
+      * `Pending` - there is not enough funds on vault to process the withdrawal.
+      * `Waiting for approve` - withdrawal amount is bigger than the limit
 
-## Methods
+## Instructions
 
-There are few methods in the program for `Solana` tokens:
+There are few instructions in the program:
 
+* Vote For Withdrawal Request 
+* Withdraw Ever Token
+* Withdraw Solana Token
 * Initialize 
-* Deposit
+* Initialize Mint
+* Initialize Vault
+* Deposit Ever Token
+* Deposit Solana Token
 * Withdrawal Request
-* Confirm withdrawal
-* Withdraw
-* Force pending withdrawal
+* Approve Ever Token Withdrawal Request
+* Approve Solana Token Withdrawal Request
 * Cancel pending withdrawal
-* Change bounty for pending withdrawal
 * Fill pending withdrawal
-
-There are few methods in the program for `Ever` tokens:
-
-* Initialize
-* Deposit
-* Withdrawal Request
-* Confirm withdrawal
-* Withdraw
-* Force pending withdrawal
-
-There are few methods in the program for admin:
-* Approve pending withdrawal
-* Change settings
-* Withdraw from vault
-* Change admin
+* Change bounty of pending withdrawal
 
 ## Upgrade
 
@@ -311,7 +371,7 @@ Deployer of `Token proxy` program can upgrade code via BPF loader at any time, u
 old program with the new one, but address will remain the same. So deployer keys must be stored very caution. Maybe
 the best here is to use multi-signature account.
 
-## Multi-token design
+## Multi-token design (TBD)
 
 To enable transferring all custom tokens created in `Everscale` the following three steps are provided:
 
