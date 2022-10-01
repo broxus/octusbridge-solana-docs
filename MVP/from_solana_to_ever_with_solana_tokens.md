@@ -1,4 +1,4 @@
-# Proposal #1
+# Proposal #1 (DEPRECATED!)
 
 ## Motivation
 
@@ -26,19 +26,11 @@ to use vault in `Solana` blockchain to store received from users tokens and lock
 
 ![Solana Ever Solana tokens](../../png/solana_ever_solana_tokens.png "Solana Ever Solana tokens")
 
-## Proposal #2
+## Proposal #2 (Current)
 
 To save all deposits by user it is good to have PDA, created on each user request.
 Between steps 4 and 5 `Token proxy` program should create such one.
 
 ### Deposit account
 
-Deposit account must contain following fields:
-* Payload Id
-* Sender address in `Solana`
-* Receiver address in `Everscale`
-* Amount
-* `Token root` account address
-* Decimals count
-
-It will not have any status because we assume that it is created when user has successfully deposited his funds to the vault.
+Deposit account description can be found in ([Round loader](../programs/token_proxy.md)) in `Deposit account` section

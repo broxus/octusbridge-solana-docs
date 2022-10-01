@@ -1,4 +1,4 @@
-# Proposal #1
+# Proposal #1 (DEPRECATED!)
 
 ## Motivation
 
@@ -40,7 +40,7 @@ It will be passed on program input by user, and it must be validated in the `Rou
 
 The main issue of this scheme is the same as with the proposal for transferring `Solana` tokens from `Everscale` to `Solana`.
 
-# Proposal #2
+# Proposal #2 (Current)
 
 ## Motivation
 

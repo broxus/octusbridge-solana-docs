@@ -1,4 +1,4 @@
-# Proposal #1
+# Proposal #1 (DEPRECATED!)
 
 ## Motivation
 
@@ -14,7 +14,7 @@ to use the vault owned by the `Token proxy` program in the `Solana` blockchain t
 5. User calls withdraw tokens from vault in the `Solana` `Token Proxy` program transferring the payload with relays signs.
 6. The `Token Proxy` program calls the `Round loader` program to check relays signs.
 7. The `Round loader` program gets current round relays info (public keys, addresses) and checks signs.
-8. If there are no errors wuth the `Round loader` program, then the `Token proxy` creates unique withdraw account with a `PayloadId` from the event.
+8. If there are no errors with the `Round loader` program, then the `Token proxy` creates unique withdraw account with data from the event.
 9. If a withdrawal account was not created before, then the `Token proxy` program calls transfer tokens on the `SPL token` program.
 10. The `SPL token` program decreases `Vault` account tokens and increases users tokens balance.
 
@@ -44,7 +44,7 @@ It will be passed on program input by the user, and it must be validated in the 
 The main issue of this scheme is that the user must pass all relays signs when creating a withdrawal on `Solana`. 
 The relays signs do not fit the max size for client transactions, and the user has to engage in batching, signing every part with his keys.
 
-# Proposal #2
+# Proposal #2 (CURRENT)
 
 ## Motivation
 
@@ -74,27 +74,7 @@ Standard withdrawal algorithm
 
 ### Withdrawal account
 
-Withdrawal accounts contain the following:
-* Account Kind: `Proposal`
-* Relays round number
-* Required number of confirmations
-* Confirmed Relays
-* Sender address in `Everscale`
-* Receiver address in `Solana`
-* Amount
-* Bounty for withdrawal
-* Kind of withdrawal
-* Author
-* `Settings` address of withdrawal
-* Event timestamp from `Everscale`,
-* Event transaction_lt from `Everscale`,
-* Event configuration from `Everscale`,
-* Status: new, expired, processed, cancelled, pending, waiting for approve
-    * `New` is needed to save relays confirms.
-    * `Processed` - all funds were successfully transferred to user.
-    * `Cancelled` - user asked to cancel withdrawal, his funds were minted in `Everscale` to his address back.
-    * `Pending` - there is not enough funds on vault to process the withdrawal.
-    * `Waiting for approve` - withdrawal amount is bigger than the limit
+Withdrawal account description can be found in ([Round loader](../programs/token_proxy.md)) in `Withdrawal account` section
 
 ## Scheme
 

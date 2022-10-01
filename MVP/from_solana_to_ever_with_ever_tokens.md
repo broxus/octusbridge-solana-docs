@@ -1,4 +1,4 @@
-# Proposal #1
+# Proposal #1 (DEPRECATED!)
 
 ## Motivation
 
@@ -27,7 +27,7 @@ It will be passed on program input by user, and it must be validated in `Token p
 
 ![Solana Ever Ever tokens](../png/solana_ever_ever_tokens.png "Solana Ever Ever tokens")
 
-## Proposal #2
+## Proposal #2 (Current)
 
 To save all token burns by user it is good to use the same PDA as for `Solana` tokens from `Solana` to `Everscale` transfer, 
 created on each user request.

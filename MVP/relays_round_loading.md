@@ -1,4 +1,4 @@
-# Proposal #1
+# Proposal #1 (DEPRECATED)
 
 ## Motivation
 
@@ -31,7 +31,7 @@ If it is some kind of admin, it must have access to do it. Maybe he mustn't as t
 The size of one relay pub key is 32 byte. The maximum count of relays in one round is 100. To use all relays loading in one transaction
 its size must be at least 3200 byte. The limit is 1232 bytes. So this proposal design, copied from `Ethereum` bridge, is not appropriate in `Solana`! 
 
-# Proposal #2
+# Proposal #2 (Current)
 
 ## Motivation
 
@@ -58,23 +58,11 @@ from seed containing round number, proposal author public key and `Round loader`
 
 ### New round relays proposal account
 
-New round relays proposal is an account containing following:
-* New relay addresses (public keys)
-* Account Kind: `Proposal`
-* Round TTL
-* Round number
-* Voters
-* Required number of confirmations
-* Is initialized flag (shows that relays can vote)
-* Is executed flag (shows that proposal is accepted and new round relays is created successfully)
+New round relays proposal description can be found in ([Round loader](../programs/round_loader.md)) in accounts section
   
 ### New round relays account
 
-New round relays is an account containing following:
-* Relay addresses (public keys)
-* Account Kind: `RelayRound`
-* Round TTL
-* Round number
+New round relays description can be found in ([Round loader](../programs/round_loader.md)) in accounts section
 
 ## Scheme
 
