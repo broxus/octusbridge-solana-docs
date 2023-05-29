@@ -407,16 +407,19 @@ bounty in `Everscale`.
 * Relays round number - only relays from this round can approve this event
 * Required votes to be processed
 * Proposal Data for approve (PDA) :
-    * Settings address - corresponding settings program address
     * Event timestamp - timestamp from `Everscale` blockchain transaction
     * Event transaction logical time - transaction logical time from `Everscale` blockchain transaction
     * Event configuration address - `Everscale` event configuration address, that created event
   
 * Event:
     * Event length - Bytes count of followed data
-    * Sender address in `Everscale`
-    * Receiver address in `Solana`
+    * Token root address in `Everscale`
+    * Token name
+    * Token symbol
+    * Token decimals
     * Amount
+    * Receiver address in `Solana`
+    * Payload
 * Meta:
     * Meta length - Bytes count of followed data
     * Bounty for withdrawal
@@ -426,6 +429,9 @@ bounty in `Everscale`.
       * `Cancelled` - user asked to cancel withdrawal, his funds were minted in `Everscale` to his address back.
       * `Pending` - there is not enough funds on vault to process the withdrawal.
       * `Waiting for approve` - withdrawal amount is bigger than the limit
+    * Epoch - timestamp to calculate daily limits correspondence
+* Signers - array of relays votes
+
 
 ## Instructions
 
@@ -435,56 +441,24 @@ There are few instructions in the program:
 * Withdraw Ever Token
 * Withdraw Solana Token
 * Initialize 
-* Initialize Mint
-* Initialize Vault
 * Deposit Ever Token
 * Deposit Solana Token
-* Withdrawal Request
+* Withdrawal Ever Request
+* Withdrawal Solana Request
 * Approve Ever Token Withdrawal Request
 * Approve Solana Token Withdrawal Request
 * Cancel pending withdrawal
 * Fill pending withdrawal
 * Change bounty of pending withdrawal
+* Update Fee
+* Withdraw Ever Fee
+* Withdraw Solana Fee
+* Execute Payload for Ever tokens
+* Execute Payload for Solana tokens
+* Withdraw from Proxy account
 
 ## Upgrade
 
 Deployer of `Token proxy` program can upgrade code via BPF loader at any time, using his keys pair. It would replace
 old program with the new one, but address will remain the same. So deployer keys must be stored very caution. Maybe
 the best here is to use multi-signature account.
-
-## Multi-token design (TBD)
-
-To enable transferring all custom tokens created in `Everscale` the following three steps are provided:
-
-* Global init instruction - Add super admin public key, that will be the default admin key for all of this kind of tokens.
-* Specific Withdraw request instruction - it will save public key of Mint PDA, created after confirmation.
-* Initialize `Everscale` token by confirmed withdrawal instruction - it will create Mint PDA by the name of token in withdrawal meta.
-
-By default, such tokens will be created without any limits both for deposit and withdrawal. 
-
-### Global init
-
-Can be called only by program authority and will create `Global Settings` account
-
-#### Global Settings
-
-* Super admin - public key of the default admin for custom `Everscale` tokens 
-
-### Specific withdraw request
-
-It will take decimals and name not from `Settings` account, but by user input. If they will not be appropriate, relays will not
-confirm such request.
-
-### Initialize by confirmed withdrawal
-
-Anyone can call this instruction in order to create `Mint` account and `Settings` account for this token.
-
-1. User calls initialize by confirmed withdrawal in `Solana` `Token Proxy` program.
-2. `Token proxy` program calculates `Global Settings` PDA address, fetches super admin public key.
-2. `Token proxy` program calculates `Withdrawal` PDA address, checks that it is confirmed.
-3. `Token proxy` program calls initialize `Mint` account via `SPL token` program with data, provided by withdrawal.
-4. `Token proxy` program creates `Settings` PDA address, and fills it with data, provided by withdrawal.
-
-After the initialization success, user can call `withdraw`, and he will receive funds from withdrawal request.
-To be reminded! To receive funds, associated token account must be created before the mint process occurs. This must be done
-manually on user side.
