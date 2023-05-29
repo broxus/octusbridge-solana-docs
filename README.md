@@ -39,7 +39,7 @@ Relays will support `Solana` as long as `Everscale` and `Ethereum` and its forks
 
 ## Stage II
 
-Stage II allows users to transfer tokens from `Solana` to `Everscale` with the use of credits processor in `Everscale`. ([Doc](../Stage 2/from_solana_to_ever_with_solana_tokens_2_stage.md))
+Stage II allows users to transfer tokens from `Solana` to `Everscale` with the use of credits processor in `Everscale`. ([Doc](../Stage 2/credit_processor_2_stage.md))
 
 ## Stage III
 
